@@ -15,11 +15,11 @@
     --divider: #2a2d33;
     --red: #ef4444;
     /* theme — overridden by JS. graph drives sweeps/segments/rings; text drives labels/readouts. */
-    --theme: #22d3ee;
-    --theme-bright: #67e8f9;
-    --theme-dim: rgba(34, 211, 238, 0.20);
-    --theme-faint: rgba(34, 211, 238, 0.06);
-    --text-color: #f2f4f7;
+    --theme: #22C55E;
+    --theme-bright: #D1D5DB;
+    --theme-dim: rgba(34, 197, 94, 0.20);
+    --theme-faint: rgba(34, 197, 94, 0.06);
+    --text-color: #D1D5DB;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -129,6 +129,73 @@
     border: 2px solid transparent;
   }
   .swatch.active { border-color: #fff; }
+  .theme-select {
+    width: 100%;
+    min-height: 34px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--divider);
+    color: var(--text);
+    font-family: var(--plex-cond);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 7px 9px;
+    border-radius: 3px;
+    outline: none;
+  }
+  .theme-select:focus { border-color: var(--theme); }
+  .theme-select option {
+    background: #07080b;
+    color: var(--text);
+  }
+  .theme-preview {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: 30px;
+    padding: 7px 9px;
+    border: 1px solid rgba(255,255,255,0.055);
+    border-radius: 3px;
+    background: rgba(0,0,0,0.16);
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .theme-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.30);
+    box-shadow: 0 0 12px rgba(255,255,255,0.10);
+    flex: 0 0 auto;
+  }
+  .theme-custom-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    padding: 10px;
+    border: 1px dashed var(--divider);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.018);
+  }
+  .theme-custom-controls[hidden] { display: none; }
+  .theme-custom-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .theme-custom-field label {
+    font-family: var(--plex-cond);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  @media (max-width: 720px) {
+    .theme-custom-controls { grid-template-columns: 1fr; }
+  }
   .slider-row {
     display: grid;
     grid-template-columns: 80px 1fr 60px;
@@ -969,9 +1036,203 @@
     background: rgba(255,255,255,0.05);
     padding: 1px 5px; border-radius: 2px;
   }
+
+  .site-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.4;
+    margin-top: 8px;
+  }
+  .site-counter strong {
+    color: var(--theme-bright);
+    font-family: var(--plex-mono);
+    font-weight: 600;
+  }
+  .site-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .site-footer-links a {
+    color: var(--theme-bright);
+    text-decoration: none;
+  }
+  .site-footer-links a:hover {
+    text-decoration: underline;
+  }
+
+
+
+  /* ============== uniform DashUI site header ============== */
+  .site-header {
+    display: block;
+    position: relative;
+    z-index: 950;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    font-family: var(--plex-sans, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif);
+  }
+
+  .site-header-inner {
+    width: min(1180px, calc(100% - 36px));
+    margin: 0 auto;
+    padding: 26px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+  }
+
+  .site-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    font-weight: 900;
+    font-size: clamp(1.3rem, 2vw, 1.55rem);
+    line-height: 1;
+    flex: 0 0 auto;
+    white-space: nowrap;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+
+  .site-mark {
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--divider, #2b2d35);
+    border-radius: 12px;
+    background: linear-gradient(145deg, rgba(255,255,255,.07), transparent), #0d0e12;
+    display: grid;
+    place-items: center;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+    flex: 0 0 auto;
+  }
+
+  .site-mark span {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--theme, #20c56b);
+    box-shadow: 0 0 22px rgba(32,197,107,.45);
+    position: relative;
+  }
+
+  .site-mark span::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 7px;
+    height: 2px;
+    background: var(--theme, #20c56b);
+    transform-origin: left center;
+    transform: rotate(-35deg);
+  }
+
+  .site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px 14px;
+    max-width: min(650px, calc(100% - 150px));
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .site-nav a {
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    transition: none;
+    transform: none;
+  }
+
+  .site-nav a:hover,
+  .site-nav a:focus-visible,
+  .site-nav a[aria-current="page"] {
+    color: var(--theme, #20c56b);
+    background: transparent;
+    outline: none;
+  }
+
+  @media (max-width: 960px) {
+    .site-header-inner { gap: 12px; }
+    .site-nav {
+      max-width: calc(100% - 150px);
+      gap: 6px 12px;
+      font-size: 0.74rem;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .site-header-inner {
+      width: min(100% - 24px, 1180px);
+      padding-top: 18px;
+    }
+    .site-brand { font-size: 1.18rem; }
+    .site-nav {
+      max-width: calc(100% - 142px);
+      gap: 5px 10px;
+      font-size: 0.7rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .site-header-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .site-nav {
+      max-width: 100%;
+      font-size: 0.72rem;
+    }
+  }
+
 </style>
 </head>
 <body>
+  <header class="site-header">
+    <div class="site-header-inner" aria-label="Site navigation">
+      <a class="site-brand" href="index.html" aria-label="DashUI home">
+        <span class="site-mark" aria-hidden="true"><span></span></span>
+        <span>DASHUI</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#different">Why Different</a>
+        <a href="editor.html" aria-current="page">Editor</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
 <div class="page">
 
   <div class="eyebrow">DashUI OBD-II</div>
@@ -1056,25 +1317,22 @@
     </div>
 
     <div class="ctrl-block">
-      <span class="ctrl-label">Theme · graph</span>
-      <div class="swatches" id="swatches-graph">
-        <div class="swatch active" data-c="#22d3ee" style="background:#22d3ee"></div>
-        <div class="swatch" data-c="#22c55e" style="background:#22c55e"></div>
-        <div class="swatch" data-c="#fbbf24" style="background:#fbbf24"></div>
-        <div class="swatch" data-c="#fb923c" style="background:#fb923c"></div>
-        <div class="swatch" data-c="#ec4899" style="background:#ec4899"></div>
-        <div class="swatch" data-c="#a855f7" style="background:#a855f7"></div>
-        <div class="swatch" data-c="#f2f4f7" style="background:#f2f4f7"></div>
+      <span class="ctrl-label">Theme</span>
+      <select class="theme-select" id="theme-preset-select" aria-label="Select theme"></select>
+      <div class="theme-preview" id="theme-preview" aria-live="polite">
+        <span class="theme-dot" id="theme-preview-text-dot"></span>
+        <span class="theme-dot" id="theme-preview-graph-dot"></span>
+        <span id="theme-preview-label">Select theme</span>
       </div>
-      <span class="ctrl-label" style="margin-top:6px">Theme · text</span>
-      <div class="swatches" id="swatches-text">
-        <div class="swatch active" data-c="#f2f4f7" style="background:#f2f4f7"></div>
-        <div class="swatch" data-c="#67e8f9" style="background:#67e8f9"></div>
-        <div class="swatch" data-c="#86efac" style="background:#86efac"></div>
-        <div class="swatch" data-c="#fde68a" style="background:#fde68a"></div>
-        <div class="swatch" data-c="#fdba74" style="background:#fdba74"></div>
-        <div class="swatch" data-c="#f9a8d4" style="background:#f9a8d4"></div>
-        <div class="swatch" data-c="#c4b5fd" style="background:#c4b5fd"></div>
+      <div class="theme-custom-controls" id="theme-custom-controls" hidden>
+        <div class="theme-custom-field">
+          <label for="theme-text-select">Text color</label>
+          <select class="theme-select" id="theme-text-select" aria-label="Custom text color"></select>
+        </div>
+        <div class="theme-custom-field">
+          <label for="theme-graph-select">Graph color</label>
+          <select class="theme-select" id="theme-graph-select" aria-label="Custom graph color"></select>
+        </div>
       </div>
     </div>
 
@@ -1346,6 +1604,15 @@
     cluster but the long-press handler short-circuits to a "go premium" sheet.</p>
     <p><strong>Tach label collision rule:</strong> if <code>|redline − nearestNormalizedTick| &lt; 350 RPM</code>,
     drop the normalized label and render only the redline value at one decimal (e.g. <code>6.1</code>) in red at the redline position.</p>
+    <div class="site-footer-links" aria-label="Site links">
+      <a href="/">Home</a>
+      <a href="downloads.html">Downloads</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+    <div class="site-counter" aria-label="Page visit counter">
+      Page visits: <strong data-page-visit-count>Counter setup needed</strong>
+    </div>
   </footer>
 
 </div>
@@ -1368,7 +1635,7 @@
         <button class="icon-btn" id="import-file-choose" type="button">Choose JSON file</button>
         <span class="import-file-name" id="import-file-name">No file chosen</span>
       </div>
-      <textarea id="import-text" spellcheck="false" placeholder='{ "rotations": { "0": { "tachArcX": 921.5, ... } }, "theme": "#22d3ee", ... }'></textarea>
+      <textarea id="import-text" spellcheck="false" placeholder='{ "rotations": { "0": { "tachArcX": 921.5, ... } }, "theme": "#22C55E", ... }'></textarea>
     </div>
     <div class="modal-foot">
       <span class="modal-error" id="import-msg"></span>
@@ -1480,8 +1747,9 @@ const defaults = {
   "gauge4ScaleMin": null,
   "gauge4ScaleMax": null,
   "gaugeScaleInset": 58,
-  "theme": "#22d3ee",
-  "text": "#f2f4f7",
+  "theme": "#22C55E",
+  "text": "#D1D5DB",
+  "themePreset": "default",
   "rpm": 3850,
   "redline": 7500,
   "maxRpm": 8000,
@@ -2115,8 +2383,9 @@ const EMBEDDED_STARTUP_CONFIG = {
       "tachWidthPct": 80
     }
   },
-  "theme": "#22d3ee",
-  "text": "#f2f4f7",
+  "theme": "#22C55E",
+  "text": "#D1D5DB",
+  "themePreset": "default",
   "rpm": 3850,
   "redline": 7500,
   "maxRpm": 8000,
@@ -2186,6 +2455,9 @@ try {
         if (!PER_ROTATION_ALL_SET.has(k) && saved[k] !== undefined) state[k] = saved[k];
       }
     }
+    state.theme = normalizeHex(state.theme);
+    state.text = normalizeHex(state.text);
+    state.themePreset = saved.themePreset || findThemePresetKey(state.text, state.theme);
     // mirror active rotation onto state
     const cfg = state.rotations[state.activeRotation];
     for (const k in cfg) state[k] = cfg[k];
@@ -2289,6 +2561,189 @@ function applyTheme() {
   document.documentElement.style.setProperty('--theme-dim',   rgba(state.theme, 0.22));
   document.documentElement.style.setProperty('--theme-faint', rgba(state.theme, 0.06));
   document.documentElement.style.setProperty('--text-color',  state.text);
+}
+
+//  ============================================================
+//  APP-MATCHED THEME PRESETS + CUSTOM COLOR CHOICES
+//  ============================================================
+// Mirrors the Kotlin UiPreferences package: ThemePresets + CustomColorChoices.
+const DASHUI_THEME_PRESETS = [
+  {
+    key: 'default',
+    name: 'Default',
+    colorPairLabel: 'Silver/Green',
+    textColorHex: '#D1D5DB',
+    graphColorHex: '#22C55E',
+    rowPreviewLabel: '[silver, green, silver]'
+  },
+  {
+    key: 'hot-ice',
+    name: 'Hot Ice',
+    colorPairLabel: 'Silver/Red',
+    textColorHex: '#D1D5DB',
+    graphColorHex: '#EF4444',
+    rowPreviewLabel: '[silver, silver, red]'
+  },
+  {
+    key: 'limeglass',
+    name: 'Limeglass',
+    colorPairLabel: 'Ice/Green',
+    textColorHex: '#F2F4F7',
+    graphColorHex: '#22C55E',
+    rowPreviewLabel: '[silver, ice, green]'
+  },
+  {
+    key: 'forge',
+    name: 'Forge',
+    colorPairLabel: 'Amber/Slate',
+    textColorHex: '#F59E0B',
+    graphColorHex: '#94A3B8',
+    rowPreviewLabel: '[silver, amber, slate]'
+  },
+  {
+    key: 'ice-bloom',
+    name: 'Ice Bloom',
+    colorPairLabel: 'Coral/Ice',
+    textColorHex: '#FB7185',
+    graphColorHex: '#E2E8F0',
+    rowPreviewLabel: '[silver, coral, ice]'
+  }
+];
+const DASHUI_CUSTOM_COLOR_CHOICES = [
+  { name: 'Crimson',   hex: '#DC2626' },
+  { name: 'Red',       hex: '#EF4444' },
+  { name: 'Coral',     hex: '#FB7185' },
+  { name: 'Rose',      hex: '#F43F5E' },
+  { name: 'Orange',    hex: '#F97316' },
+  { name: 'Amber',     hex: '#F59E0B' },
+  { name: 'Yellow',    hex: '#EAB308' },
+  { name: 'Lime',      hex: '#84CC16' },
+  { name: 'Green',     hex: '#22C55E' },
+  { name: 'Emerald',   hex: '#10B981' },
+  { name: 'Teal',      hex: '#14B8A6' },
+  { name: 'Cyan',      hex: '#06B6D4' },
+  { name: 'Blue',      hex: '#3B82F6' },
+  { name: 'Sky',       hex: '#0EA5E9' },
+  { name: 'Indigo',    hex: '#6366F1' },
+  { name: 'Purple',    hex: '#8B5CF6' },
+  { name: 'Violet',    hex: '#A855F7' },
+  { name: 'Magenta',   hex: '#D946EF' },
+  { name: 'Silver',    hex: '#D1D5DB' },
+  { name: 'Slate',     hex: '#94A3B8' },
+  { name: 'Charcoal',  hex: '#475569' },
+  { name: 'Ice White', hex: '#F2F4F7' },
+  { name: 'Ice',       hex: '#E2E8F0' }
+];
+const CUSTOM_THEME_KEY = 'custom';
+
+function normalizeHex(hex) {
+  const cleaned = String(hex || '').trim().replace(/^#/, '');
+  if (!/^[0-9a-fA-F]{6}$/.test(cleaned)) return '#D1D5DB';
+  return `#${cleaned.toUpperCase()}`;
+}
+function hexEq(a, b) {
+  return normalizeHex(a) === normalizeHex(b);
+}
+function themePresetByKey(key) {
+  return DASHUI_THEME_PRESETS.find(p => p.key === key) || null;
+}
+function findThemePresetKey(textHex = state.text, graphHex = state.theme) {
+  const match = DASHUI_THEME_PRESETS.find(p => hexEq(p.textColorHex, textHex) && hexEq(p.graphColorHex, graphHex));
+  return match ? match.key : CUSTOM_THEME_KEY;
+}
+function colorChoiceLabel(hex) {
+  const normalized = normalizeHex(hex);
+  const choice = DASHUI_CUSTOM_COLOR_CHOICES.find(c => hexEq(c.hex, normalized));
+  return choice ? `${choice.name} ${choice.hex}` : `Imported ${normalized}`;
+}
+function setThemeSelectValue(select, hex) {
+  if (!select) return;
+  const normalized = normalizeHex(hex);
+  let opt = Array.from(select.options).find(o => hexEq(o.value, normalized));
+  if (!opt) {
+    opt = new Option(`Imported ${normalized}`, normalized);
+    opt.dataset.imported = 'true';
+    select.appendChild(opt);
+  }
+  select.value = normalized;
+}
+function syncThemeControls() {
+  const presetSelect = document.getElementById('theme-preset-select');
+  const textSelect = document.getElementById('theme-text-select');
+  const graphSelect = document.getElementById('theme-graph-select');
+  const customBox = document.getElementById('theme-custom-controls');
+  const previewTextDot = document.getElementById('theme-preview-text-dot');
+  const previewGraphDot = document.getElementById('theme-preview-graph-dot');
+  const previewLabel = document.getElementById('theme-preview-label');
+  if (!presetSelect) return;
+
+  const exactKey = findThemePresetKey(state.text, state.theme);
+  if (!state.themePreset || (state.themePreset !== CUSTOM_THEME_KEY && !themePresetByKey(state.themePreset))) {
+    state.themePreset = exactKey;
+  }
+  if (state.themePreset !== CUSTOM_THEME_KEY && exactKey === CUSTOM_THEME_KEY) {
+    state.themePreset = CUSTOM_THEME_KEY;
+  }
+  presetSelect.value = state.themePreset;
+  const isCustom = state.themePreset === CUSTOM_THEME_KEY;
+  if (customBox) customBox.hidden = !isCustom;
+  setThemeSelectValue(textSelect, state.text);
+  setThemeSelectValue(graphSelect, state.theme);
+  if (previewTextDot) previewTextDot.style.background = normalizeHex(state.text);
+  if (previewGraphDot) previewGraphDot.style.background = normalizeHex(state.theme);
+  if (previewLabel) {
+    const preset = isCustom ? null : themePresetByKey(state.themePreset);
+    previewLabel.textContent = preset
+      ? `${preset.name} — ${preset.colorPairLabel} · ${preset.rowPreviewLabel}`
+      : `Custom Theme — text ${colorChoiceLabel(state.text)} · graph ${colorChoiceLabel(state.theme)}`;
+  }
+}
+function applyThemePreset(key) {
+  if (key === CUSTOM_THEME_KEY) {
+    state.themePreset = CUSTOM_THEME_KEY;
+    syncThemeControls();
+    persist();
+    commitHistory();
+    return;
+  }
+  const preset = themePresetByKey(key) || DASHUI_THEME_PRESETS[0];
+  state.themePreset = preset.key;
+  state.text = normalizeHex(preset.textColorHex);
+  state.theme = normalizeHex(preset.graphColorHex);
+  syncThemeControls();
+  persist();
+  commitHistory();
+}
+function setCustomThemeColor(kind, hex) {
+  state.themePreset = CUSTOM_THEME_KEY;
+  if (kind === 'text') state.text = normalizeHex(hex);
+  else state.theme = normalizeHex(hex);
+  syncThemeControls();
+  persist();
+  commitHistory();
+}
+function buildThemeControls() {
+  const presetSelect = document.getElementById('theme-preset-select');
+  const textSelect = document.getElementById('theme-text-select');
+  const graphSelect = document.getElementById('theme-graph-select');
+  if (!presetSelect || !textSelect || !graphSelect) return;
+  presetSelect.innerHTML = '';
+  for (const preset of DASHUI_THEME_PRESETS) {
+    presetSelect.appendChild(new Option(`${preset.name} — ${preset.colorPairLabel}`, preset.key));
+  }
+  presetSelect.appendChild(new Option('Custom Theme', CUSTOM_THEME_KEY));
+  const colorOptions = DASHUI_CUSTOM_COLOR_CHOICES
+    .map(c => `<option value="${c.hex}">${c.name} — ${c.hex}</option>`)
+    .join('');
+  textSelect.innerHTML = colorOptions;
+  graphSelect.innerHTML = colorOptions;
+  presetSelect.addEventListener('change', () => applyThemePreset(presetSelect.value));
+  textSelect.addEventListener('change', () => setCustomThemeColor('text', textSelect.value));
+  graphSelect.addEventListener('change', () => setCustomThemeColor('graph', graphSelect.value));
+  state.theme = normalizeHex(state.theme);
+  state.text = normalizeHex(state.text);
+  state.themePreset = state.themePreset || findThemePresetKey(state.text, state.theme);
+  syncThemeControls();
 }
 
 //  ============================================================
@@ -4128,18 +4583,7 @@ document.getElementById('tach-picker').addEventListener('click', () => {
   setTimeout(() => buildDesigner(), 0);
 });
 
-function bindSwatchGroup(id, key) {
-  const root = document.getElementById(id);
-  root.querySelectorAll('.swatch').forEach(s => {
-    s.addEventListener('click', () => {
-      root.querySelectorAll('.swatch').forEach(x => x.classList.remove('active'));
-      s.classList.add('active');
-      state[key] = s.dataset.c;
-    });
-  });
-}
-bindSwatchGroup('swatches-graph', 'theme');
-bindSwatchGroup('swatches-text',  'text');
+buildThemeControls();
 
 function bindSlider(rangeId, numId, key) {
   const range = document.getElementById(rangeId);
@@ -4553,6 +4997,7 @@ document.getElementById('reset-config').addEventListener('click', () => {
   document.getElementById('ctl-redline').value = state.redline; document.getElementById('ctl-redline-num').value = state.redline;
   document.getElementById('ctl-max').value     = state.maxRpm;  document.getElementById('ctl-max-num').value     = state.maxRpm;
   syncUnitAwareControls();
+  syncThemeControls();
   const status = document.getElementById('save-status');
   status.textContent = 'Reset to defaults';
   status.classList.remove('ok');
@@ -4575,9 +5020,6 @@ document.getElementById('copy-config').addEventListener('click', () => {
 ['layout-picker','tach-picker','shape-picker','edit-picker'].forEach(id => {
   document.getElementById(id).addEventListener('click', persist);
 });
-['swatches-graph', 'swatches-text'].forEach(id => {
-  document.getElementById(id).addEventListener('click', persist);
-});
 ['ctl-rpm','ctl-redline','ctl-max','ctl-speed','ctl-mpg','ctl-fuel'].forEach(id => {
   document.getElementById(id).addEventListener('input', persist);
 });
@@ -4598,13 +5040,7 @@ document.getElementById('copy-config').addEventListener('click', () => {
   activate('hud-picker',    state.hudMode ? 'on' : 'off');
   activate('needles-picker', state.needlesEnabled ? 'on' : 'off');
   activate('units-picker', state.unitSystem);
-  // swatches
-  document.querySelectorAll('#swatches-graph .swatch').forEach(s => {
-    s.classList.toggle('active', s.dataset.c === state.theme);
-  });
-  document.querySelectorAll('#swatches-text .swatch').forEach(s => {
-    s.classList.toggle('active', s.dataset.c === state.text);
-  });
+  syncThemeControls();
   // sliders
   document.getElementById('ctl-rpm').value = state.rpm;
   document.getElementById('ctl-rpm-num').value = state.rpm;
@@ -4729,6 +5165,9 @@ function applySnapshot(snapStr) {
   for (const k of Object.keys(defaults)) {
     if (!PER_ROTATION_ALL_SET.has(k) && snap[k] !== undefined) state[k] = snap[k];
   }
+  state.theme = normalizeHex(state.theme);
+  state.text = normalizeHex(state.text);
+  state.themePreset = snap.themePreset || findThemePresetKey(state.text, state.theme);
   if (snap.activeRotation !== undefined) state.activeRotation = snap.activeRotation;
   const cfg = state.rotations[state.activeRotation];
   for (const k in cfg) state[k] = cfg[k];
@@ -4786,11 +5225,7 @@ function refreshAllControls() {
     b.classList.toggle('active', b.dataset.val === (state.needlesEnabled ? 'on' : 'off')));
   document.querySelectorAll('#units-picker button').forEach(b =>
     b.classList.toggle('active', b.dataset.val === state.unitSystem));
-  // swatches
-  document.querySelectorAll('#swatches-graph .swatch').forEach(s =>
-    s.classList.toggle('active', s.dataset.c === state.theme));
-  document.querySelectorAll('#swatches-text .swatch').forEach(s =>
-    s.classList.toggle('active', s.dataset.c === state.text));
+  syncThemeControls();
   // top sliders
   document.getElementById('ctl-rpm').value = state.rpm;
   document.getElementById('ctl-rpm-num').value = state.rpm;
@@ -5874,4 +6309,48 @@ updateFullscreenControl();
 // Start the continuous animation loop last
 loop();
 </script>
+
+<script>
+  (function () {
+    const GOATCOUNTER_CODE = "YOUR-GOATCOUNTER-CODE"; // Example after signup: "dashuiobd"
+    const counterTarget = document.querySelector("[data-page-visit-count]");
+    if (!counterTarget) return;
+
+    if (!GOATCOUNTER_CODE || GOATCOUNTER_CODE === "YOUR-GOATCOUNTER-CODE") {
+      counterTarget.textContent = "Counter setup needed";
+      return;
+    }
+
+    const normalizedPath = (location.pathname.replace(/\/$/, "") || "/");
+
+    window.goatcounter = window.goatcounter || {};
+    window.goatcounter.path = normalizedPath;
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://gc.zgo.at/count.js";
+    script.dataset.goatcounter = "https://" + GOATCOUNTER_CODE + ".goatcounter.com/count";
+    document.body.appendChild(script);
+
+    const waitForCounter = setInterval(function () {
+      if (window.goatcounter && typeof window.goatcounter.visit_count === "function") {
+        clearInterval(waitForCounter);
+        counterTarget.textContent = "";
+        window.goatcounter.visit_count({
+          append: "[data-page-visit-count]",
+          path: normalizedPath,
+          no_branding: true
+        });
+      }
+    }, 100);
+
+    setTimeout(function () {
+      clearInterval(waitForCounter);
+      if (!counterTarget.textContent.trim()) {
+        counterTarget.textContent = "Visit count unavailable";
+      }
+    }, 5000);
+  })();
+</script>
+
 </body></html>

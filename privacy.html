@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Privacy Policy for DashUI OBD-II and dashobd.com." />
+  <meta name="description" content="Privacy Policy for DashUI OBD-II and dashuiobd.com." />
   <title>Privacy Policy | DashUI OBD-II</title>
 
   <style>
@@ -346,6 +346,27 @@
       color: var(--text);
     }
 
+
+    .site-counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.4;
+    }
+
+    .site-counter strong {
+      color: var(--text);
+      font-weight: 850;
+    }
+
+    .site-counter .counter-value {
+      color: var(--green, var(--accent, #39ff88));
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-weight: 850;
+    }
+
     @media (max-width: 840px) {
       .nav {
         align-items: flex-start;
@@ -393,24 +414,184 @@
         border-radius: 18px;
       }
     }
+  
+
+    /* ============== uniform DashUI site header ============== */
+    .site-header {
+      display: block;
+      position: relative;
+      top: auto;
+      z-index: 40;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      border: 0;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      box-shadow: none;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .site-header-inner {
+      width: min(1180px, calc(100% - 36px));
+      max-width: none;
+      margin: 0 auto;
+      padding: 26px 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 14px;
+    }
+
+    .site-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      font-weight: 900;
+      font-size: clamp(1.3rem, 2vw, 1.55rem);
+      line-height: 1;
+      flex: 0 0 auto;
+      white-space: nowrap;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+
+    .site-mark {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line, var(--divider, #2b2d35));
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(255,255,255,.07), transparent), #0d0e12;
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+      flex: 0 0 auto;
+    }
+
+    .site-mark span {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--green, var(--accent, #20c56b));
+      box-shadow: 0 0 22px color-mix(in srgb, var(--green, var(--accent, #20c56b)) 45%, transparent);
+      position: relative;
+    }
+
+    .site-mark span::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 7px;
+      height: 2px;
+      background: var(--green, var(--accent, #20c56b));
+      transform-origin: left center;
+      transform: rotate(-35deg);
+    }
+
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px 14px;
+      max-width: min(650px, calc(100% - 150px));
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      color: inherit;
+      text-decoration: none;
+      white-space: nowrap;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      transition: none;
+      transform: none;
+    }
+
+    .site-nav a:hover,
+    .site-nav a:focus-visible,
+    .site-nav a[aria-current="page"] {
+      color: var(--green, var(--accent, #20c56b));
+      background: transparent;
+      outline: none;
+    }
+
+    @media (max-width: 960px) {
+      .site-header-inner {
+        gap: 12px;
+      }
+
+      .site-nav {
+        max-width: calc(100% - 150px);
+        gap: 6px 12px;
+        font-size: 0.74rem;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .site-header-inner {
+        width: min(100% - 24px, 1180px);
+        padding-top: 18px;
+      }
+
+      .site-brand {
+        font-size: 1.18rem;
+      }
+
+      .site-nav {
+        max-width: calc(100% - 142px);
+        gap: 5px 10px;
+        font-size: 0.7rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .site-header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .site-nav {
+        max-width: 100%;
+        font-size: 0.72rem;
+      }
+    }
+
   </style>
 </head>
 
 <body>
   <a class="skip-link" href="#main">Skip to privacy policy</a>
 
-  <header>
-    <div class="nav" aria-label="Site navigation">
-      <a class="brand" href="/">
-        <span class="brand-mark" aria-hidden="true">OBD</span>
-        <span>DashUI OBD-II</span>
+  <header class="site-header">
+    <div class="site-header-inner" aria-label="Site navigation">
+      <a class="site-brand" href="index.html" aria-label="DashUI home">
+        <span class="site-mark" aria-hidden="true"><span></span></span>
+        <span>DASHUI</span>
       </a>
 
-      <nav class="nav-links" aria-label="Primary navigation">
-        <a href="/">Home</a>
-        <a href="/editor">Cluster Editor</a>
-        <a href="/contact">Contact</a>
-        <a href="/privacy" aria-current="page">Privacy</a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#different">Why Different</a>
+        <a href="editor.html">Editor</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html" aria-current="page">Privacy</a>
       </nav>
     </div>
   </header>
@@ -431,7 +612,7 @@
     </div>
     <div class="meta-card">
       <span>Website</span>
-      <strong>dashobd.com</strong>
+      <strong>dashuiobd.com</strong>
     </div>
     <div class="meta-card">
       <span>Product</span>
@@ -470,7 +651,7 @@
             adapter, use diagnostic features, or access premium features.
           </p>
           <p>
-            By using DashUI, dashobd.com, or related services, you acknowledge that information may be collected and
+            By using DashUI, dashuiobd.com, or related services, you acknowledge that information may be collected and
             processed as described in this Privacy Policy.
           </p>
         </section>
@@ -717,8 +898,8 @@
           <div class="contact-box">
             <p>
               <strong>DashUI OBD-II</strong><br />
-              Website: <a href="https://dashobd.com">dashobd.com</a><br />
-              Privacy Contact: <a href="/contact">dashobd.com/contact</a>
+              Website: <a href="https://dashuiobd.com">dashuiobd.com</a><br />
+              Privacy Contact: <a href="contact.html">dashuiobd.com/contact</a>
             </p>
           </div>
         </section>
@@ -729,12 +910,60 @@
   <footer>
     <div class="footer-inner">
       <span>&copy; 2026 DashUI OBD-II. All rights reserved.</span>
+<span class="site-counter" aria-label="Page visit counter">
+        Page visits: <strong class="counter-value" data-page-visit-count>Counter setup needed</strong>
+      </span>
       <span>
         <a href="/">Home</a> ·
-        <a href="/editor">Cluster Editor</a> ·
-        <a href="/contact">Contact</a>
+        <a href="editor.html">Cluster Editor</a> ·
+        <a href="downloads.html">Downloads</a> ·
+        <a href="contact.html">Contact</a>
       </span>
     </div>
   </footer>
+
+<script>
+  (function () {
+    const GOATCOUNTER_CODE = "YOUR-GOATCOUNTER-CODE"; // Example after signup: "dashuiobd"
+    const counterTarget = document.querySelector("[data-page-visit-count]");
+    if (!counterTarget) return;
+
+    if (!GOATCOUNTER_CODE || GOATCOUNTER_CODE === "YOUR-GOATCOUNTER-CODE") {
+      counterTarget.textContent = "Counter setup needed";
+      return;
+    }
+
+    const normalizedPath = (location.pathname.replace(/\/$/, "") || "/");
+
+    window.goatcounter = window.goatcounter || {};
+    window.goatcounter.path = normalizedPath;
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://gc.zgo.at/count.js";
+    script.dataset.goatcounter = "https://" + GOATCOUNTER_CODE + ".goatcounter.com/count";
+    document.body.appendChild(script);
+
+    const waitForCounter = setInterval(function () {
+      if (window.goatcounter && typeof window.goatcounter.visit_count === "function") {
+        clearInterval(waitForCounter);
+        counterTarget.textContent = "";
+        window.goatcounter.visit_count({
+          append: "[data-page-visit-count]",
+          path: normalizedPath,
+          no_branding: true
+        });
+      }
+    }, 100);
+
+    setTimeout(function () {
+      clearInterval(waitForCounter);
+      if (!counterTarget.textContent.trim()) {
+        counterTarget.textContent = "Visit count unavailable";
+      }
+    }, 5000);
+  })();
+</script>
+
 </body>
 </html>

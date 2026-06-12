@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Contact DashUI OBD-II for support, privacy questions, diagnostics feedback, adapter compatibility reports, and business inquiries." />
-  <title>Contact | DashUI OBD-II</title>
+  <meta name="description" content="Download DashUI OBD-II from Google Drive and view site/download click counters." />
+  <title>Downloads | DashUI OBD-II</title>
 
   <style>
     :root {
@@ -17,18 +17,14 @@
       --line: rgba(255,255,255,0.12);
       --accent: #39ff88;
       --accent-2: #74f7ff;
+      --danger: #ff4d6d;
       --shadow: 0 28px 80px rgba(0,0,0,0.45);
       --radius: 24px;
       --max: 1080px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -42,10 +38,7 @@
       line-height: 1.68;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .skip-link {
       position: absolute;
@@ -59,9 +52,7 @@
       font-weight: 800;
     }
 
-    .skip-link:focus {
-      left: 1rem;
-    }
+    .skip-link:focus { left: 1rem; }
 
     header {
       position: sticky;
@@ -123,7 +114,8 @@
     }
 
     .nav-links a:hover,
-    .nav-links a:focus-visible {
+    .nav-links a:focus-visible,
+    .nav-links a[aria-current="page"] {
       color: var(--text);
       background: rgba(255,255,255,0.08);
       outline: none;
@@ -136,7 +128,7 @@
     }
 
     .hero {
-      max-width: 780px;
+      max-width: 820px;
       margin-bottom: 2rem;
     }
 
@@ -168,14 +160,13 @@
       font-size: clamp(1.05rem, 2.2vw, 1.28rem);
     }
 
-    .contact-grid {
+    .downloads-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
-      gap: 1.25rem;
-      align-items: stretch;
+      gap: 1rem;
     }
 
-    .card {
+    .download-card,
+    .setup-card {
       background:
         linear-gradient(180deg, rgba(255,255,255,0.045), transparent),
         rgba(11,16,23,0.9);
@@ -185,8 +176,17 @@
       padding: clamp(1.25rem, 3vw, 2.2rem);
     }
 
+    .download-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
     h2 {
-      margin: 0 0 0.9rem;
+      margin: 0 0 0.35rem;
       font-size: clamp(1.35rem, 2vw, 1.8rem);
       line-height: 1.15;
       letter-spacing: -0.045em;
@@ -197,107 +197,54 @@
       color: var(--muted);
     }
 
-    p:last-child {
-      margin-bottom: 0;
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(57,255,136,0.28);
+      background: rgba(57,255,136,0.08);
+      color: var(--accent);
+      font-weight: 850;
+      font-size: 0.82rem;
     }
 
-    .contact-methods {
+    .asset-list {
       display: grid;
-      gap: 1rem;
-      margin-top: 1.4rem;
+      gap: 0.85rem;
+      margin-top: 1.25rem;
     }
 
-    .method {
+    .asset {
       display: grid;
-      grid-template-columns: 3.25rem minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 1rem;
       align-items: center;
       padding: 1rem;
       border-radius: 20px;
       background: rgba(255,255,255,0.055);
       border: 1px solid var(--line);
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
     }
 
-    .method:hover,
-    .method:focus-within {
-      transform: translateY(-2px);
-      border-color: rgba(57,255,136,0.34);
-      background: rgba(57,255,136,0.07);
-    }
-
-    .icon {
-      width: 3.25rem;
-      height: 3.25rem;
-      border-radius: 1.05rem;
-      display: grid;
-      place-items: center;
-      background:
-        linear-gradient(135deg, rgba(57,255,136,0.22), rgba(116,247,255,0.12)),
-        rgba(255,255,255,0.045);
-      border: 1px solid rgba(255,255,255,0.13);
-      color: var(--accent);
-      font-size: 1.3rem;
-    }
-
-    .method span {
-      display: block;
-      color: var(--soft);
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 800;
-      margin-bottom: 0.16rem;
-    }
-
-    .method a {
-      color: var(--text);
-      font-size: clamp(1rem, 2.5vw, 1.15rem);
-      font-weight: 850;
+    .asset h3 {
+      margin: 0 0 0.25rem;
+      font-size: 1.04rem;
+      letter-spacing: -0.02em;
       word-break: break-word;
     }
 
-    .method small {
-      display: block;
-      color: var(--muted);
-      margin-top: 0.1rem;
+    .asset-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem 1rem;
+      color: var(--soft);
       font-size: 0.9rem;
     }
 
-    .support-list {
-      display: grid;
-      gap: 0.75rem;
-      margin: 1.2rem 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .support-list li {
-      color: var(--muted);
-      padding: 0.85rem 0.9rem;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.045);
-      border: 1px solid var(--line);
-    }
-
-    .support-list strong {
-      color: var(--text);
-    }
-
-    .note {
-      margin-top: 1.25rem;
-      padding: 1rem;
-      border-radius: 18px;
-      border: 1px solid rgba(116,247,255,0.20);
-      background: rgba(116,247,255,0.06);
-      color: #dffcff;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.35rem;
+    .asset-meta strong {
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
 
     .button {
@@ -312,6 +259,7 @@
       color: #001508;
       background: var(--accent);
       box-shadow: 0 14px 32px rgba(57,255,136,0.14);
+      white-space: nowrap;
     }
 
     .button.secondary {
@@ -326,6 +274,71 @@
       filter: brightness(1.08);
       outline: none;
     }
+
+    code {
+      color: #dffcff;
+      background: rgba(116,247,255,0.08);
+      border: 1px solid rgba(116,247,255,0.16);
+      border-radius: 8px;
+      padding: 0.12rem 0.35rem;
+      word-break: break-word;
+    }
+
+    ol {
+      margin: 0.4rem 0 0;
+      padding-left: 1.25rem;
+      color: var(--muted);
+    }
+
+    li { margin-bottom: 0.55rem; }
+
+    .notice {
+      margin-top: 1.25rem;
+      padding: 1rem;
+      border-radius: 18px;
+      border: 1px solid rgba(116,247,255,0.20);
+      background: rgba(116,247,255,0.06);
+      color: #dffcff;
+    }
+
+
+    .download-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin: 1.25rem 0 0;
+    }
+
+    .metric {
+      padding: 1rem;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.055);
+      border: 1px solid var(--line);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--soft);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 850;
+      margin-bottom: 0.3rem;
+    }
+
+    .metric strong {
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 1.15rem;
+      font-weight: 900;
+    }
+
+    .drive-note {
+      margin-top: 1rem;
+      color: var(--soft);
+      font-size: 0.92rem;
+    }
+
 
     footer {
       border-top: 1px solid var(--line);
@@ -344,14 +357,8 @@
       font-size: 0.92rem;
     }
 
-    .footer-inner a {
-      color: var(--muted);
-    }
-
-    .footer-inner a:hover {
-      color: var(--text);
-    }
-
+    .footer-inner a { color: var(--muted); }
+    .footer-inner a:hover { color: var(--text); }
 
     .site-counter {
       display: inline-flex;
@@ -363,12 +370,7 @@
     }
 
     .site-counter strong {
-      color: var(--text);
-      font-weight: 850;
-    }
-
-    .site-counter .counter-value {
-      color: var(--green, var(--accent, #39ff88));
+      color: var(--accent);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-weight: 850;
     }
@@ -379,32 +381,17 @@
         flex-direction: column;
       }
 
-      main {
-        padding-top: 3.5rem;
-      }
-
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
+      main { padding-top: 3.5rem; }
+      .asset { grid-template-columns: 1fr; }
+      .asset .button { width: 100%; }
+      .download-metrics { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 520px) {
-      .card {
+      .download-card,
+      .setup-card {
         border-radius: 18px;
         padding: 1.1rem;
-      }
-
-      .method {
-        grid-template-columns: 1fr;
-      }
-
-      .icon {
-        width: 3rem;
-        height: 3rem;
-      }
-
-      .button {
-        width: 100%;
       }
     }
   
@@ -569,7 +556,7 @@
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to contact information</a>
+  <a class="skip-link" href="#main">Skip to downloads</a>
 
   <header class="site-header">
     <div class="site-header-inner" aria-label="Site navigation">
@@ -582,136 +569,165 @@
         <a href="index.html#features">Features</a>
         <a href="index.html#different">Why Different</a>
         <a href="editor.html">Editor</a>
-        <a href="downloads.html">Downloads</a>
-        <a href="contact.html" aria-current="page">Contact</a>
+        <a href="downloads.html" aria-current="page">Downloads</a>
+        <a href="contact.html">Contact</a>
         <a href="privacy.html">Privacy</a>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <section class="hero" aria-labelledby="contact-title">
-      <span class="eyebrow">Contact DashUI</span>
-      <h1 id="contact-title">Support, feedback, and diagnostics help.</h1>
+    <section class="hero" aria-labelledby="downloads-title">
+      <span class="eyebrow">DashUI Downloads</span>
+      <h1 id="downloads-title">Download the latest public files.</h1>
       <p class="lead">
-        Reach out for DashUI OBD-II support, adapter compatibility reports, diagnostics feedback,
-        privacy questions, or business inquiries.
+        Download the current DashUI public file from Google Drive. The download counter tracks button clicks from this page.
       </p>
     </section>
 
-    <div class="contact-grid">
-      <section class="card" aria-labelledby="contact-methods-title">
-        <h2 id="contact-methods-title">Contact information</h2>
-        <p>
-          The fastest way to reach DashUI OBD-II is by email. Please include your vehicle year, make,
-          model, adapter model, phone/device model, and a brief description of the issue when contacting support.
+    <div class="downloads-grid">
+      <section class="download-card" aria-labelledby="latest-download-title">
+        <div class="download-head">
+          <div>
+            <h2 id="latest-download-title">Current DashUI download</h2>
+            <p>Hosted on Google Drive so the website button can stay simple and stable.</p>
+          </div>
+          <span class="tag">Google Drive</span>
+        </div>
+
+        <article class="asset">
+          <div>
+            <h3>DashUI current public download</h3>
+            <div class="asset-meta">
+              <span>Source: Google Drive</span>
+              <span>File ID: <strong>1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ</strong></span>
+            </div>
+          </div>
+          <a class="button"
+             href="https://drive.google.com/uc?export=download&id=1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ"
+             target="_blank"
+             rel="noopener"
+             data-goatcounter-click="download_dashui_google_drive"
+             data-goatcounter-title="DashUI Google Drive download"
+             data-goatcounter-no-session="1">
+            Download DashUI
+          </a>
+        </article>
+
+        <div class="download-metrics" aria-label="Download and page counters">
+          <div class="metric">
+            <span>Download clicks</span>
+            <strong id="download-click-count">Counter setup needed</strong>
+          </div>
+          <div class="metric">
+            <span>This page visits</span>
+            <strong id="page-visit-count">Counter setup needed</strong>
+          </div>
+        </div>
+
+        <p class="drive-note">
+          The counter records clicks on the download button. Google Drive does not give this static website a public completed-download counter.
         </p>
-
-        <div class="contact-methods">
-          <div class="method">
-            <div class="icon" aria-hidden="true">✉</div>
-            <div>
-              <span>Email</span>
-              <a href="mailto:dashuiobdii@gmail.com">dashuiobdii@gmail.com</a>
-              <small>Support, privacy requests, feedback, and business inquiries.</small>
-            </div>
-          </div>
-
-          <div class="method">
-            <div class="icon" aria-hidden="true">☎</div>
-            <div>
-              <span>Phone</span>
-              <a href="tel:+14435964935">+1-443-596-4935</a>
-              <small>For direct contact when email is not convenient.</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="button-row">
-          <a class="button" href="mailto:dashuiobdii@gmail.com?subject=DashUI%20OBD-II%20Support%20Request">Email Support</a>
-          <a class="button secondary" href="tel:+14435964935">Call DashUI</a>
-        </div>
       </section>
 
-      <aside class="card" aria-labelledby="help-title">
-        <h2 id="help-title">What to include</h2>
+      <section class="setup-card" aria-labelledby="setup-title">
+        <h2 id="setup-title">Counter setup</h2>
         <p>
-          Better details help us improve diagnostics, adapter compatibility, and future DashUI features.
+          This page is already wired for GoatCounter. To activate the visible counters, create your GoatCounter site and replace <code>YOUR-GOATCOUNTER-CODE</code> near the bottom of this file with your site code.
         </p>
-
-        <ul class="support-list">
-          <li><strong>Vehicle:</strong> year, make, model, engine, and trim if known.</li>
-          <li><strong>Adapter:</strong> brand, model, connection type, and where it was purchased.</li>
-          <li><strong>Device:</strong> phone/tablet model, Android version, and DashUI app version.</li>
-          <li><strong>Issue:</strong> what happened, what you expected, and whether it repeats.</li>
-          <li><strong>Datalogs:</strong> attach only logs you are comfortable sharing.</li>
-        </ul>
-
-        <div class="note">
-          For privacy or data deletion requests, please use the email above and include “Privacy Request”
-          in the subject line.
+        <ol>
+          <li>Keep the Google Drive file shared as <code>Anyone with the link</code>.</li>
+          <li>In GoatCounter settings, enable public visitor counters.</li>
+          <li>Replace <code>YOUR-GOATCOUNTER-CODE</code> in this file, for example <code>dashuiobd</code>.</li>
+          <li>Upload this file to your GitHub Pages repo as <code>downloads.html</code>.</li>
+        </ol>
+        <div class="notice">
+          The button link can survive Drive file renames because it uses the Google Drive file ID. It can break if the file is deleted, replaced with a brand-new Drive file, or sharing permissions are restricted.
         </div>
-      </aside>
+      </section>
     </div>
   </main>
 
   <footer>
     <div class="footer-inner">
       <span>&copy; 2026 DashUI OBD-II. All rights reserved.</span>
-<span class="site-counter" aria-label="Page visit counter">
-        Page visits: <strong class="counter-value" data-page-visit-count>Counter setup needed</strong>
+      <span class="site-counter" aria-label="Page visit counter">
+        Page visits: <strong data-page-visit-count>Counter setup needed</strong>
       </span>
       <span>
         <a href="/">Home</a> ·
         <a href="editor.html">Cluster Editor</a> ·
         <a href="downloads.html">Downloads</a> ·
+        <a href="contact.html">Contact</a> ·
         <a href="privacy.html">Privacy Policy</a>
       </span>
     </div>
   </footer>
 
-<script>
-  (function () {
-    const GOATCOUNTER_CODE = "YOUR-GOATCOUNTER-CODE"; // Example after signup: "dashuiobd"
-    const counterTarget = document.querySelector("[data-page-visit-count]");
-    if (!counterTarget) return;
+  <script>
+    (function () {
+      const GOATCOUNTER_CODE = "YOUR-GOATCOUNTER-CODE"; // Example after signup: "dashuiobd"
+      const pageCounterTarget = document.getElementById("page-visit-count");
+      const downloadCounterTarget = document.getElementById("download-click-count");
+      const footerCounterTarget = document.querySelector("[data-page-visit-count]");
+      const downloadEventPath = "download_dashui_google_drive";
 
-    if (!GOATCOUNTER_CODE || GOATCOUNTER_CODE === "YOUR-GOATCOUNTER-CODE") {
-      counterTarget.textContent = "Counter setup needed";
-      return;
-    }
+      function setText(target, value) {
+        if (target) target.textContent = value;
+      }
 
-    const normalizedPath = (location.pathname.replace(/\/$/, "") || "/");
+      function showSetupNeeded() {
+        setText(pageCounterTarget, "Counter setup needed");
+        setText(downloadCounterTarget, "Counter setup needed");
+        setText(footerCounterTarget, "Counter setup needed");
+      }
 
-    window.goatcounter = window.goatcounter || {};
-    window.goatcounter.path = normalizedPath;
+      if (!GOATCOUNTER_CODE || GOATCOUNTER_CODE === "YOUR-GOATCOUNTER-CODE") {
+        showSetupNeeded();
+        return;
+      }
 
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = "https://gc.zgo.at/count.js";
-    script.dataset.goatcounter = "https://" + GOATCOUNTER_CODE + ".goatcounter.com/count";
-    document.body.appendChild(script);
+      const normalizedPath = (location.pathname.replace(/\/$/, "") || "/");
 
-    const waitForCounter = setInterval(function () {
-      if (window.goatcounter && typeof window.goatcounter.visit_count === "function") {
-        clearInterval(waitForCounter);
-        counterTarget.textContent = "";
+      window.goatcounter = window.goatcounter || {};
+      window.goatcounter.path = normalizedPath;
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://gc.zgo.at/count.js";
+      script.dataset.goatcounter = "https://" + GOATCOUNTER_CODE + ".goatcounter.com/count";
+      document.body.appendChild(script);
+
+      function appendCounter(selector, path, fallback) {
+        const target = document.querySelector(selector);
+        if (!target || !window.goatcounter || typeof window.goatcounter.visit_count !== "function") return;
+        target.textContent = "";
         window.goatcounter.visit_count({
-          append: "[data-page-visit-count]",
-          path: normalizedPath,
+          append: selector,
+          path: path,
           no_branding: true
         });
+        setTimeout(function () {
+          if (target && !target.textContent.trim()) target.textContent = fallback;
+        }, 5000);
       }
-    }, 100);
 
-    setTimeout(function () {
-      clearInterval(waitForCounter);
-      if (!counterTarget.textContent.trim()) {
-        counterTarget.textContent = "Visit count unavailable";
-      }
-    }, 5000);
-  })();
-</script>
+      const waitForCounter = setInterval(function () {
+        if (window.goatcounter && typeof window.goatcounter.visit_count === "function") {
+          clearInterval(waitForCounter);
+          appendCounter("#page-visit-count", normalizedPath, "Visit count unavailable");
+          appendCounter("[data-page-visit-count]", normalizedPath, "Visit count unavailable");
+          appendCounter("#download-click-count", downloadEventPath, "Click count unavailable");
+        }
+      }, 100);
 
+      setTimeout(function () {
+        clearInterval(waitForCounter);
+        if (pageCounterTarget && pageCounterTarget.textContent === "Counter setup needed") pageCounterTarget.textContent = "Visit count unavailable";
+        if (downloadCounterTarget && downloadCounterTarget.textContent === "Counter setup needed") downloadCounterTarget.textContent = "Click count unavailable";
+        if (footerCounterTarget && footerCounterTarget.textContent === "Counter setup needed") footerCounterTarget.textContent = "Visit count unavailable";
+      }, 6000);
+    })();
+  </script>
 </body>
 </html>

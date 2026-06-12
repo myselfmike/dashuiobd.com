@@ -90,7 +90,8 @@
     header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
+      gap: 14px;
       padding: 26px 0;
       position: relative;
       z-index: 4;
@@ -101,8 +102,10 @@
       align-items: center;
       gap: 12px;
       letter-spacing: .04em;
-      font-weight: 800;
-      font-size: 1.08rem;
+      font-weight: 900;
+      font-size: clamp(1.3rem, 2vw, 1.55rem);
+      line-height: 1;
+      flex: 0 0 auto;
     }
 
     .mark {
@@ -139,9 +142,21 @@
 
     nav {
       display: flex;
-      gap: 22px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px 14px;
       color: var(--muted);
-      font-size: .9rem;
+      font-size: .78rem;
+      line-height: 1;
+      max-width: min(650px, calc(100% - 150px));
+      font-weight: 850;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    nav a {
+      white-space: nowrap;
     }
 
     .hero {
@@ -183,7 +198,7 @@
       font-size: clamp(3.4rem, 8vw, 7.8rem);
       letter-spacing: -.08em;
       line-height: .84;
-      text-transform: uppercase;
+      text-transform: none;
     }
 
     .subline {
@@ -513,8 +528,78 @@
       font-size: .86rem;
     }
 
-    @media (max-width: 960px) {
-      nav { display: none; }
+
+    .download-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .download-card,
+    .download-meta-card {
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      background: rgba(17,18,22,.62);
+      padding: 24px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+
+    .download-card h3,
+    .download-meta-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+    }
+
+    .download-card p,
+    .download-meta-card p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0 0 18px;
+    }
+
+    .download-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0 0;
+    }
+
+    .download-stat {
+      border: 1px solid var(--line-soft);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(0,0,0,.18);
+    }
+
+    .download-stat b {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 3px;
+      color: var(--green);
+    }
+
+    .download-stat span {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    @media (max-width: 760px) {
+      .download-panel { grid-template-columns: 1fr; }
+      .download-stats { grid-template-columns: 1fr; }
+    }
+@media (max-width: 960px) {
+      header {
+        gap: 12px;
+      }
+
+      nav {
+        display: flex;
+        max-width: calc(100% - 150px);
+        gap: 6px 12px;
+        font-size: .74rem;
+      }
+
       .hero { grid-template-columns: 1fr; padding-top: 34px; gap: 46px; min-height: auto; }
       .phone { transform: none; }
       .grid { grid-template-columns: repeat(2, 1fr); }
@@ -533,11 +618,29 @@
     @media (max-width: 620px) {
       .page { width: min(100% - 24px, 1180px); }
       header { padding-top: 18px; }
-      .brand { font-size: 1rem; }
+      .brand { font-size: 1.18rem; }
+      nav {
+        max-width: calc(100% - 142px);
+        gap: 5px 10px;
+        font-size: .7rem;
+      }
       .stats { grid-template-columns: 1fr; }
       .grid { grid-template-columns: 1fr; }
       section { padding: 64px 0; }
       .actions .button, .contact-links .button { width: 100%; }
+    }
+
+    @media (max-width: 500px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      nav {
+        max-width: 100%;
+        font-size: .72rem;
+      }
     }
 
     @media (max-width: 420px) {
@@ -548,33 +651,195 @@
       .feature, .callout, .truth-row { padding: 18px; }
       .contact-card { border-radius: 24px; }
     }
+  
+
+    /* ============== uniform DashUI site header ============== */
+    .site-header {
+      display: block;
+      position: relative;
+      top: auto;
+      z-index: 40;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      border: 0;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      box-shadow: none;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .site-header-inner {
+      width: min(1180px, calc(100% - 36px));
+      max-width: none;
+      margin: 0 auto;
+      padding: 26px 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 14px;
+    }
+
+    .site-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      font-weight: 900;
+      font-size: clamp(1.3rem, 2vw, 1.55rem);
+      line-height: 1;
+      flex: 0 0 auto;
+      white-space: nowrap;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+
+    .site-mark {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line, var(--divider, #2b2d35));
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(255,255,255,.07), transparent), #0d0e12;
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+      flex: 0 0 auto;
+    }
+
+    .site-mark span {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--green, var(--accent, #20c56b));
+      box-shadow: 0 0 22px color-mix(in srgb, var(--green, var(--accent, #20c56b)) 45%, transparent);
+      position: relative;
+    }
+
+    .site-mark span::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 7px;
+      height: 2px;
+      background: var(--green, var(--accent, #20c56b));
+      transform-origin: left center;
+      transform: rotate(-35deg);
+    }
+
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px 14px;
+      max-width: min(650px, calc(100% - 150px));
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      color: inherit;
+      text-decoration: none;
+      white-space: nowrap;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      transition: none;
+      transform: none;
+    }
+
+    .site-nav a:hover,
+    .site-nav a:focus-visible,
+    .site-nav a[aria-current="page"] {
+      color: var(--green, var(--accent, #20c56b));
+      background: transparent;
+      outline: none;
+    }
+
+    @media (max-width: 960px) {
+      .site-header-inner {
+        gap: 12px;
+      }
+
+      .site-nav {
+        max-width: calc(100% - 150px);
+        gap: 6px 12px;
+        font-size: 0.74rem;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .site-header-inner {
+        width: min(100% - 24px, 1180px);
+        padding-top: 18px;
+      }
+
+      .site-brand {
+        font-size: 1.18rem;
+      }
+
+      .site-nav {
+        max-width: calc(100% - 142px);
+        gap: 5px 10px;
+        font-size: 0.7rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .site-header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .site-nav {
+        max-width: 100%;
+        font-size: 0.72rem;
+      }
+    }
+
   </style>
 </head>
 <body>
-  <header class="page">
-    <div class="brand" aria-label="DashUI home">
-      <span class="mark"><span></span></span>
-      DASHUI
+  <header class="site-header">
+    <div class="site-header-inner" aria-label="Site navigation">
+      <a class="site-brand" href="index.html" aria-label="DashUI home">
+        <span class="site-mark" aria-hidden="true"><span></span></span>
+        <span>DASHUI</span>
+      </a>
+
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#different">Why Different</a>
+        <a href="editor.html">Editor</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
     </div>
-    <nav aria-label="Main navigation">
-      <a href="/#features">Features</a>
-      <a href="/#different">Why different</a>
-      <a href="/editor">Editor</a>
-      <a href="/contact">Contact</a>
-      <a href="/privacy">Privacy</a>
-    </nav>
   </header>
 
   <main id="top" class="page">
     <div class="hero">
       <div class="hero-copy">
         <div class="eyebrow"><span class="dot"></span> Editor live now • Android app coming soon to Google Play Store</div>
-        <h1>OBD-II<br />that simply<br />works.</h1>
+        <h1>DashUI OBD-II<br />that simply<br />works.</h1>
         <p class="subline"><strong>DashUI</strong> is the no-nonsense native Android diagnostics app for drivers who want real data, not fluff.</p>
         <div class="actions">
-          <a class="button primary" href="/editor" aria-label="Open the live DashUI OBD-II Cluster Editor">Open Live Editor</a>
-          <span class="button">Android App — Coming Soon</span>
-          <span class="button">Google Play Store</span>
+          <a class="button primary" href="editor.html" aria-label="Try the live DashUI OBD-II Cluster Editor now">Try Cluster Editor Now</a>
+          <a class="button primary" href="downloads.html" aria-label="Download DashUI OBD-II now">Download Now</a>
+          <span class="button">Coming Soon: Google Play Store</span>
         </div>
         <div class="stats" aria-label="DashUI highlights">
           <div class="stat"><b>2 Hz+</b><span>Fast live PID updates</span></div>
@@ -655,14 +920,40 @@
       </div>
     </section>
 
+    <section id="downloads">
+      <div class="section-head">
+        <div class="section-kicker">Downloads</div>
+        <h2>Get DashUI.</h2>
+        <p>Download the current public DashUI file from Google Drive.</p>
+      </div>
+
+      <div class="download-panel">
+        <article class="download-card">
+          <h3>Current DashUI download</h3>
+          <p>The download is hosted on Google Drive using your shared file link. Renaming the file in Drive should not break the website link because the button uses the file ID.</p>
+          <div class="actions">
+            <a class="button primary" href="downloads.html">Open downloads page</a>
+            <a class="button" href="https://drive.google.com/file/d/1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ/view?usp=drive_link" target="_blank" rel="noopener">Open Google Drive</a>
+          </div>
+        </article>
+
+        <aside class="download-meta-card">
+          <h3>Simple and reliable</h3>
+          <p>This version keeps the download flow simple: no counters, no GitHub release lookup, and no third-party tracking scripts.</p>
+          <p>The Google Drive button opens the shared Drive file directly instead of forcing a fragile auto-download URL.</p>
+        </aside>
+      </div>
+    </section>
+
   </main>
 
   <footer class="page">
     <p>DashUI — OBD-II diagnostics for people who want their car to tell the truth.</p>
-    <div class="footer-links" aria-label="Footer navigation">
-      <a href="/editor">Editor</a>
-      <a href="/contact">Contact</a>
-      <a href="/privacy">Privacy</a>
+<div class="footer-links" aria-label="Footer navigation">
+      <a href="editor.html">Editor</a>
+      <a href="downloads.html">Downloads</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
     </div>
   </footer>
 </body>
