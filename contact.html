@@ -8,15 +8,16 @@
 
   <style>
     :root {
-      --bg: #05070a;
-      --panel: #0b1017;
-      --panel-2: #101823;
-      --text: #f4f7fb;
-      --muted: #a9b4c2;
-      --soft: #7d8998;
-      --line: rgba(255,255,255,0.12);
-      --accent: #39ff88;
-      --accent-2: #74f7ff;
+      --bg: #08090b;
+      --panel: #111216;
+      --panel-2: #17181d;
+      --text: #f0f1f5;
+      --muted: #a4a7b2;
+      --soft: #727681;
+      --line: #2b2d35;
+      --line-soft: rgba(255,255,255,0.08);
+      --green: #20c56b;
+      --green-soft: rgba(32,197,107,0.17);
       --shadow: 0 28px 80px rgba(0,0,0,0.45);
       --radius: 24px;
       --max: 1080px;
@@ -36,8 +37,7 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 18% 0%, rgba(57,255,136,0.14), transparent 28rem),
-        radial-gradient(circle at 86% 18%, rgba(116,247,255,0.10), transparent 24rem),
+        radial-gradient(circle at 18% 0%, rgba(32,197,107,0.14), transparent 28rem),
         linear-gradient(180deg, #05070a 0%, #080c12 48%, #05070a 100%);
       line-height: 1.68;
     }
@@ -52,8 +52,8 @@
       left: -999px;
       top: 1rem;
       padding: 0.75rem 1rem;
-      background: var(--accent);
-      color: #001508;
+      background: var(--green);
+      color: #03060a;
       border-radius: 999px;
       z-index: 999;
       font-weight: 800;
@@ -98,11 +98,11 @@
       display: grid;
       place-items: center;
       background:
-        linear-gradient(135deg, rgba(57,255,136,0.25), rgba(116,247,255,0.12)),
+        linear-gradient(135deg, rgba(32,197,107,0.25), rgba(0,0,0,0.12)),
         #0d141d;
       border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: inset 0 0 18px rgba(57,255,136,0.18);
-      color: var(--accent);
+      box-shadow: inset 0 0 18px rgba(32,197,107,0.18);
+      color: var(--green);
       font-size: 0.9rem;
     }
 
@@ -233,10 +233,10 @@
       display: grid;
       place-items: center;
       background:
-        linear-gradient(135deg, rgba(57,255,136,0.22), rgba(116,247,255,0.12)),
+        linear-gradient(135deg, rgba(32,197,107,0.22), rgba(0,0,0,0.12)),
         rgba(255,255,255,0.045);
-      border: 1px solid rgba(255,255,255,0.13);
-      color: var(--accent);
+      border: 1px solid rgba(32,197,107,0.25);
+      color: var(--green);
       font-size: 1.3rem;
     }
 
@@ -308,10 +308,10 @@
       padding: 0.75rem 1rem;
       border-radius: 999px;
       font-weight: 850;
-      border: 1px solid rgba(57,255,136,0.35);
-      color: #001508;
-      background: var(--accent);
-      box-shadow: 0 14px 32px rgba(57,255,136,0.14);
+      border: 1px solid rgba(32,197,107,0.35);
+      color: #03060a;
+      background: var(--green);
+      box-shadow: 0 14px 32px rgba(32,197,107,0.14);
     }
 
     .button.secondary {
@@ -319,6 +319,12 @@
       background: transparent;
       border-color: var(--line);
       box-shadow: none;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      filter: brightness(1.08);
+      outline: none;
     }
 
     .button:hover,
@@ -363,12 +369,13 @@
     }
 
     .site-counter strong {
-      color: var(--text);
+      color: var(--green);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-weight: 850;
     }
 
     .site-counter .counter-value {
-      color: var(--green, var(--accent, #39ff88));
+      color: var(--green);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-weight: 850;
     }
