@@ -165,28 +165,6 @@
       padding: 12px 0 72px;
     }
 
-    .hero-copy {
-      margin-bottom: -12px;
-      margin-top: -8px;
-    }
-    .landscape-preview {
-      display: flex;
-      justify-content: flex-start;
-      margin-top: -20px;
-      max-width: 850px;
-    }
-
-    .landscape-phone {
-      width: min(750px, 85vw);
-      border-radius: 34px;
-      padding: 16px;
-      background: linear-gradient(145deg, rgba(255,255,255,.12), transparent 28%), #090a0d;
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,.04);
-      transform: none;
-    }
-
-
     .preview-stack {
       display: grid;
       gap: 18px;
@@ -246,17 +224,6 @@
       margin-top: 16px;
       max-width: 850px;
     }
-
-    .landscape-phone {
-      width: min(750px, 85vw);
-      border-radius: 34px;
-      padding: 16px;
-      background: linear-gradient(145deg, rgba(255,255,255,.12), transparent 28%), #090a0d;
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,.04);
-      transform: none;
-    }
-
 
     .subline {
       margin: 22px 0 0;
@@ -351,34 +318,74 @@
       z-index: -1;
     }
 
+    .phone,
+    .landscape-phone {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      border-radius: 34px;
+      --bezel-gap: 9px;
+      /* Dark metal frame (black-titanium look). The body stays mainly dark;
+         a bright silver crown rides the rounded outer edge to read as a lit
+         chamfer, then falls off into a deep dark valley toward the screen.
+         Built from concentric rings that follow the rounded rectangle, so the
+         curvature reads identically on every edge and on both phones. */
+      background: linear-gradient(180deg, #2c2f35 0%, #181a1f 48%, #101216 62%, #23262c 100%);
+      border: 0;
+      box-shadow:
+        /* floats the device off the page */
+        0 40px 110px rgba(0,0,0,.66),
+        /* black outer rim — the dark edge of the curve */
+        0 0 0 1px rgba(0,0,0,.9),
+        /* bright silver crown catching light along the whole outer edge */
+        inset 0 0 0 1px rgba(232,238,245,.95),
+        /* silver falloff just inside the crown (the curve rolling away) */
+        inset 0 0 0 2.5px rgba(120,131,145,.4),
+        /* deep dark valley so the body reads as mainly dark and rounded */
+        inset 0 0 9px 5px rgba(0,0,0,.6);
+    }
+
     .phone {
       width: min(357px, 75vw);
-      border-radius: 34px;
-      padding: 14px;
-      background: linear-gradient(145deg, rgba(255,255,255,.12), transparent 28%), #090a0d;
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,.04);
-      transform: rotateX(3deg) rotateY(-8deg);
+      padding: var(--bezel-gap);
+      transform:
+        perspective(1400px)
+        rotateX(9deg)
+        rotateY(-18deg)
+        rotateZ(-1.5deg);
+      transform-origin: center center;
     }
 
     .landscape-phone {
       width: min(750px, 85vw);
-      border-radius: 34px;
-      padding: 16px;
-      background: linear-gradient(145deg, rgba(255,255,255,.12), transparent 28%), #090a0d;
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,.04);
-      transform: none;
+      --bezel-gap: 9px;
+      padding: var(--bezel-gap);
+      transform:
+        perspective(1400px)
+        rotateX(12deg)
+        rotateY(0deg)
+        rotateZ(0deg);
+      transform-origin: center center;
     }
 
     .screen {
       border-radius: 26px;
       overflow: hidden;
-      background: #0a0b0e;
-      border: 1px solid #20222a;
+      background: #07080b;
+      border: 0;
       display: block;
       width: 100%;
       height: auto;
+      position: relative;
+      z-index: 1;
+      box-shadow:
+        /* dark seam where the glass meets the metal frame */
+        0 0 0 1px rgba(0,0,0,.7),
+        /* faint silver lip where the bezel curves back up to the glass */
+        0 0 0 2px rgba(150,161,175,.28),
+        /* glass sits recessed below the bezel, deepening the rounded frame */
+        inset 0 2px 6px rgba(0,0,0,.7),
+        inset 0 0 0 1px rgba(255,255,255,.04);
     }
 
     .cluster-card {
@@ -681,7 +688,7 @@
       .download-panel { grid-template-columns: 1fr; }
       .download-stats { grid-template-columns: 1fr; }
     }
-@media (max-width: 960px) {
+    @media (max-width: 960px) {
       header {
         gap: 12px;
       }
@@ -694,7 +701,8 @@
       }
 
       .hero { grid-template-columns: 1fr; padding-top: 34px; gap: 46px; min-height: auto; }
-      .phone { transform: none; }
+      .phone,
+      .landscape-phone { transform: none; }
       .grid { grid-template-columns: repeat(2, 1fr); }
       .split { grid-template-columns: 1fr; }
       .preview-stack { max-width: 780px; margin: 0 auto; }
@@ -704,7 +712,8 @@
       .hero { padding-bottom: 66px; }
       h1 { font-size: clamp(3rem, 16vw, 5.4rem); }
       .subline { font-size: 1.05rem; }
-      .phone { width: min(405px, 94vw); padding: 10px; }
+      .phone { width: min(405px, 94vw); padding: 4px; }
+      .landscape-phone { width: min(750px, 94vw); padding: 5px; }
       .cluster-card { padding: 10px; border-radius: 22px; }
     }
 
@@ -740,7 +749,8 @@
       .page { width: min(100% - 18px, 1180px); }
       .eyebrow { width: 100%; justify-content: center; font-size: .68rem; }
       h1 { font-size: clamp(2.65rem, 17vw, 4.6rem); }
-      .phone { width: 100%; }
+      .phone,
+      .landscape-phone { width: 100%; }
       .feature, .callout, .truth-row { padding: 18px; }
       .contact-card { border-radius: 24px; }
     }
@@ -943,7 +953,7 @@
         <div class="landscape-preview" aria-label="DashUI landscape cluster preview">
           <div class="phone-glow">
             <div class="phone landscape-phone">
-              <img class="screen landscape-screen" src="assets/landscape-render-sample.png" alt="DashUI landscape view preview" style="object-fit: cover;" loading="eager" decoding="async" />
+              <img class="screen landscape-screen" src="Samples/Landscape.png" alt="DashUI landscape view preview" style="object-fit: cover;" loading="eager" decoding="async" />
             </div>
           </div>
         </div>
@@ -953,7 +963,7 @@
         <div class="phone-wrap" aria-label="DashUI portrait phone preview">
           <div class="phone-glow">
             <div class="phone">
-              <img class="screen" src="assets/dashui-phone-cluster-preview.png" alt="DashUI app interface preview" style="object-fit: cover;" loading="eager" decoding="async" />
+              <img class="screen" src="Samples/Vertical.png" alt="DashUI app interface preview" style="object-fit: cover;" loading="eager" decoding="async" />
             </div>
           </div>
         </div>
