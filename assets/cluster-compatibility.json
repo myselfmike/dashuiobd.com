@@ -1,0 +1,58 @@
+{
+  "contractVersion": 1,
+  "targetApp": {
+    "name": "DashUI",
+    "versionName": "0.8.74",
+    "versionCode": 74,
+    "renderer": "app/src/main/assets/cluster/cluster.html"
+  },
+  "rotations": [0, 90, 180, 270],
+  "viewBoxes": {
+    "0": [853, 1843],
+    "90": [1843, 853],
+    "180": [853, 1843],
+    "270": [1843, 853]
+  },
+  "positionalFields": [
+    "tachArcX", "tachArcY", "tachBarX", "tachBarY",
+    "gauge1X", "gauge1Y", "gauge2X", "gauge2Y", "gauge3X", "gauge3Y", "gauge4X", "gauge4Y",
+    "gaugeSmallSize", "gaugeLargeSize", "archStartH", "archEndH", "barH", "tachArcWidthPct", "tachBarWidthPct"
+  ],
+  "broadcastFields": [
+    "layout", "tach", "hudMode", "editMode", "needlesEnabled", "needleCenterReadout",
+    "gauge1Enabled", "gauge2Enabled", "gauge3Enabled", "gauge4Enabled",
+    "gauge1Sensor", "gauge2Sensor", "gauge3Sensor", "gauge4Sensor",
+    "archHalfDeg", "archGrowthExp", "archSegThickness", "archSegTilt", "archSegTiltExp", "archLabelOffset",
+    "barGap", "segCount", "tachLabelFontSize", "tachBarLabelDy", "tachHeaderSize", "tachHeaderDy",
+    "gauge1LabelDx", "gauge1LabelDy", "gauge1LabelSize", "gauge1ValueDx", "gauge1ValueDy", "gauge1ValueSize", "gauge1UnitDx", "gauge1UnitDy", "gauge1UnitSize",
+    "gauge2LabelDx", "gauge2LabelDy", "gauge2LabelSize", "gauge2ValueDx", "gauge2ValueDy", "gauge2ValueSize", "gauge2UnitDx", "gauge2UnitDy", "gauge2UnitSize",
+    "gauge3LabelDx", "gauge3LabelDy", "gauge3LabelSize", "gauge3ValueDx", "gauge3ValueDy", "gauge3ValueSize", "gauge3UnitDx", "gauge3UnitDy", "gauge3UnitSize",
+    "gauge4LabelDx", "gauge4LabelDy", "gauge4LabelSize", "gauge4ValueDx", "gauge4ValueDy", "gauge4ValueSize", "gauge4UnitDx", "gauge4UnitDy", "gauge4UnitSize",
+    "gauge1ScaleSize", "gauge1ScaleMin", "gauge1ScaleMax", "gauge2ScaleSize", "gauge2ScaleMin", "gauge2ScaleMax",
+    "gauge3ScaleSize", "gauge3ScaleMin", "gauge3ScaleMax", "gauge4ScaleSize", "gauge4ScaleMin", "gauge4ScaleMax", "gaugeScaleInset"
+  ],
+  "globalFields": [
+    "theme", "text", "gaugeGlowEnabled", "gaugeGlowColor", "unitSystem", "shape", "snapToGrid", "gridSize", "editorMode"
+  ],
+  "previewOnlyFields": [
+    "rpm", "redline", "maxRpm", "speed", "boost", "baro", "coolant", "oilTemp", "avgMpg", "instantMpg", "fuelLevel", "throttle",
+    "themePreset", "selectedGauge", "fuelOpacity", "fuelStiffness", "fuelDamping", "fuelWaveAmp", "ecoGrowthMax", "ecoSwayIntensity", "ecoTrunkW", "ecoTrunkH", "ecoCanopyR"
+  ],
+  "enums": {
+    "layout": ["balanced", "performance", "economy"],
+    "tach": ["arc", "bar"],
+    "unitSystem": ["metric", "standard"],
+    "shape": ["circle", "squircle", "square"],
+    "editorMode": ["classic", "inspector", "direct", "command"],
+    "sensor": ["coolant", "rpm", "speed", "fuel", "boost", "oil", "mpg-avg", "mpg-inst", "throttle"]
+  },
+  "numericRanges": {
+    "activeRotation": [0, 270],
+    "gaugeSmallSize": [80, 900],
+    "gaugeLargeSize": [80, 1000],
+    "tachArcWidthPct": [20, 100],
+    "tachBarWidthPct": [20, 100],
+    "segCount": [10, 100],
+    "gridSize": [5, 100]
+  }
+}

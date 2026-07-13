@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DashUI — OBD-II Diagnostics</title>
+  <title>DashUI: OBD-II Diagnostics</title>
   <meta name="description" content="DashUI is a native Android OBD-II diagnostics app coming soon to Google Play Store." />
   <style>
     :root {
@@ -335,7 +335,7 @@
       box-shadow:
         /* floats the device off the page */
         0 40px 110px rgba(0,0,0,.66),
-        /* black outer rim — the dark edge of the curve */
+        /* black outer rim, the dark edge of the curve */
         0 0 0 1px rgba(0,0,0,.9),
         /* bright silver crown catching light along the whole outer edge */
         inset 0 0 0 1px rgba(232,238,245,.95),
@@ -425,9 +425,16 @@
     }
 
     .screen.landscape-screen {
-      aspect-ratio: 1280 / 583;
+      aspect-ratio: 1843 / 853;
       object-fit: cover;
       background: #020508;
+    }
+
+    .cluster-renderer-frame {
+      display: block;
+      border: 0;
+      background: #03060a;
+      pointer-events: none;
     }
 
     section {
@@ -754,7 +761,7 @@
       .feature, .callout, .truth-row { padding: 18px; }
       .contact-card { border-radius: 24px; }
     }
-  
+
 
     /* ============== uniform DashUI site header ============== */
     .site-header {
@@ -913,6 +920,8 @@
     }
 
   </style>
+  <link rel="stylesheet" href="assets/site.css" />
+  <script src="assets/site.js" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -936,24 +945,26 @@
   <main id="top" class="page">
     <div class="hero">
       <div class="hero-copy">
-        <div class="eyebrow"><span class="dot"></span> Live Cluster Editor • Native Android • Tablet & Folding Support • Windows in Development</div>
-        <h1>DashUI OBD-II<br />Professional<br />Diagnostics.</h1>
-        <p class="subline"><strong>DashUI</strong> is a native Android OBD-II diagnostics app that delivers real vehicle data through a clean, professional interface. Built for drivers who want accurate information without subscription traps or fake smoothing. Works on phones, tablets, and folding devices. Windows version in development.</p>
+        <div class="eyebrow"><span class="dot"></span> Browser Cluster Editor • Native Android • Tablet & Folding Support • Windows in Development</div>
+        <h1>DashUI: OBD-II Diagnostics.</h1>
+        <p class="subline"><strong>DashUI</strong>, Dashboard User Interface for OBD-II, is a free native Android diagnostics app that delivers real vehicle data through a clean, professional interface. DashUI Plus is available as a $4.99 upgrade. DashUI Live is coming soon with advanced features and estimated subscription pricing of $9.99 monthly or $79.99 yearly.</p>
         <div class="actions">
-          <a class="button primary" href="editor.html" aria-label="Try the live DashUI OBD-II Cluster Editor">Try Live Cluster Editor</a>
-          <a class="button primary" href="downloads.html" aria-label="Download DashUI OBD-II">Download Now</a>
+          <a class="button primary" href="editor.html" aria-label="Try the DashUI cluster editor">Try Cluster Editor</a>
+          <a class="button primary" href="downloads.html" aria-label="Download DashUI: OBD-II Diagnostics">Download Now</a>
           <span class="button">Coming Soon: Google Play Store</span>
         </div>
-        <div class="stats" aria-label="DashUI core capabilities">
-          <div class="stat"><b>Adaptive PID</b><span>Smart polling based on vehicle compatibility</span></div>
-          <div class="stat"><b>CAN-BUS</b><span>Full support for modern OBD-II protocols</span></div>
-          <div class="stat"><b>Native Android</b><span>Optimized performance, no subscription</span></div>
+        <div class="stats" aria-label="DashUI editions and pricing">
+          <div class="stat"><b>DashUI</b><span>Free</span></div>
+          <div class="stat"><b>DashUI Plus</b><span>$4.99 upgrade</span></div>
+          <div class="stat"><b>DashUI Live</b><span>Coming soon · pricing estimated</span></div>
         </div>
 
         <div class="landscape-preview" aria-label="DashUI landscape cluster preview">
           <div class="phone-glow">
             <div class="phone landscape-phone">
-              <img class="screen landscape-screen" src="Samples/Landscape.png" alt="DashUI landscape view preview" style="object-fit: cover;" loading="eager" decoding="async" />
+              <iframe class="screen landscape-screen cluster-renderer-frame" data-cluster-renderer
+                src="assets/cluster-renderer-0.8.74.html" title="DashUI 0.8.74 live gauge cluster"
+                loading="eager" scrolling="no"></iframe>
             </div>
           </div>
         </div>
@@ -963,7 +974,55 @@
         <div class="phone-wrap" aria-label="DashUI portrait phone preview">
           <div class="phone-glow">
             <div class="phone">
-              <img class="screen" src="Samples/Vertical.png" alt="DashUI app interface preview" style="object-fit: cover;" loading="eager" decoding="async" />
+              <div class="screen portrait-screen" data-scroll-screen>
+                <div class="portrait-scroll-content">
+                  <div class="app-home">
+                    <div class="app-home-header">
+                      <strong>DASHUI</strong>
+                      <span class="connection-pill"><i></i>POLLING</span>
+                      <span class="app-gear">⚙</span>
+                    </div>
+                    <section class="app-panel adapter-panel">
+                      <h3>ADAPTER STATUS</h3>
+                      <div class="adapter-name"><strong>OBDII</strong><span>BT</span></div>
+                      <p>00:1D:A5:02:9B:DF<br>Live polling active.</p>
+                      <button>DISCONNECT</button>
+                      <button>START OFFLINE SIM</button>
+                    </section>
+                    <section class="app-panel garage-panel">
+                      <h3>GARAGE</h3><button>SLOT #1</button>
+                    </section>
+                    <section class="app-panel functions-panel">
+                      <h3>FUNCTIONS</h3>
+                      <button>GAUGE CLUSTER</button>
+                      <button>MODULES <em>PLUS ONLY</em></button>
+                      <button>SERVICE FUNCTIONS <em>PLUS ONLY</em></button>
+                    </section>
+                    <section class="app-panel live-data-panel">
+                      <div class="live-data-head"><h3>LIVE DATA</h3><button>START LOG</button></div>
+                      <div class="home-pid-row" data-home-pid="rpm">
+                        <div><b>RPM <small>(010C)</small></b><span>rpm</span><strong data-telemetry="rpm">850</strong></div>
+                        <svg viewBox="0 0 100 22" preserveAspectRatio="none"><polyline data-spark="rpm" points="0,18 100,18" /></svg>
+                      </div>
+                      <div class="home-pid-row" data-home-pid="speed">
+                        <div><b>Vehicle Speed <small>(010D)</small></b><span>MPH</span><strong data-telemetry="speed">0</strong></div>
+                        <svg viewBox="0 0 100 22" preserveAspectRatio="none"><polyline data-spark="speed" points="0,18 100,18" /></svg>
+                      </div>
+                      <div class="home-pid-row"><div><b>Coolant Temp <small>(0105)</small></b><span>°F</span><strong>177</strong></div><svg viewBox="0 0 100 22"><polyline points="0,18 70,18 72,8 100,8" /></svg></div>
+                      <div class="home-pid-row"><div><b>MAF Rate <small>(0110)</small></b><span>g/s</span><strong data-telemetry="maf">5.6</strong></div><svg viewBox="0 0 100 22" preserveAspectRatio="none"><polyline data-spark="maf" points="0,18 100,18" /></svg></div>
+                      <div class="home-pid-row"><div><b>Throttle <small>(0111)</small></b><span>%</span><strong data-telemetry="throttle">2</strong></div><svg viewBox="0 0 100 22" preserveAspectRatio="none"><polyline data-spark="throttle" points="0,18 100,18" /></svg></div>
+                      <div class="home-pid-row" data-home-pid="boost">
+                        <div><b><span data-telemetry-label="boost">VACUUM</span> <small>(010B)</small></b><span data-telemetry-unit="boost">inHg</span><strong data-telemetry="boost">10.0</strong></div>
+                        <svg viewBox="0 0 100 22" preserveAspectRatio="none"><polyline data-spark="boost" points="0,18 100,18" /></svg>
+                      </div>
+                      <div class="home-pid-row"><div><b>Oil Temp <small>(015C)</small></b><span>°F</span><strong>181</strong></div><svg viewBox="0 0 100 22"><polyline points="0,18 100,18" /></svg></div>
+                      <div class="home-pid-row"><div><b>Battery Voltage <small>(0142)</small></b><span>V</span><strong>14.18</strong></div><svg viewBox="0 0 100 22"><polyline points="0,18 30,12 100,9" /></svg></div>
+                    </section>
+                    <section class="app-panel version-panel"><h3>APP VERSION</h3><strong>v0.8.74</strong><button>APP INFO</button><button>EXPORT DIAGNOSTICS</button></section>
+                    <button class="report-button">REPORT ISSUE</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1020,7 +1079,7 @@
         <div class="callout">
           <div class="section-kicker">Live Web Editor</div>
           <h2>Design your cluster online.</h2>
-          <p>Use our browser-based editor to customize your layout before installing on your device. Drag-and-drop gauges, choose themes, and preview in real-time. Import and export configurations to share with others or backup your custom setups. Full undo/redo support ensures you can experiment freely without worry. No app installation required—just open your browser and start designing.</p>
+          <p>Use our browser-based editor to customize your layout before installing on your device. Drag-and-drop gauges, choose themes, and preview in real-time. Import and export configurations to share with others or backup your custom setups. Full undo/redo support ensures you can experiment freely without worry. No app installation required, just open your browser and start designing.</p>
           <div class="actions" style="margin-top: 24px;">
             <a class="button primary" href="editor.html">Try Live Editor</a>
           </div>
@@ -1058,8 +1117,8 @@
       <div class="split">
         <div class="callout">
           <div class="section-kicker">Why DashUI</div>
-          <h2>Professional diagnostics. No subscription traps.</h2>
-          <p>DashUI is for drivers who want accurate vehicle data without fake smoothing, monthly fees, or subscription bait. Built for real-world use with privacy-first design. One-time purchase means you own it forever—no recurring charges, no premium features locked behind paywalls. All vehicle data stays local on your device, and we never sell your driving information to third parties. Just honest diagnostics tools for people who care about their vehicles.</p>
+          <h2>Start free. Upgrade when it makes sense.</h2>
+          <p>DashUI keeps professional OBD-II diagnostics accessible with a free core app and a straightforward Plus upgrade. DashUI Live is the next tier, with advanced features coming soon. Full Live details will be announced closer to release.</p>
         </div>
         <div class="bullet-panel">
           <div class="truth-row">
@@ -1068,7 +1127,15 @@
           </div>
           <div class="truth-row">
             <div class="check">✓</div>
-            <div><b>One-Time Purchase</b><span>Pay once, own it forever. No monthly fees or premium features locked behind subscriptions.</span></div>
+            <div><b>DashUI · Free</b><span>The core DashUI experience is free.</span></div>
+          </div>
+          <div class="truth-row">
+            <div class="check">+</div>
+            <div><b>DashUI Plus · $4.99</b><span>A straightforward paid upgrade for users who want more from DashUI.</span></div>
+          </div>
+          <div class="truth-row">
+            <div class="check">→</div>
+            <div><b>DashUI Live · Coming Soon</b><span>Advanced features are in development. Estimated pricing is $9.99/month or $79.99/year and may change before launch.</span></div>
           </div>
           <div class="truth-row">
             <div class="check">✓</div>
@@ -1086,27 +1153,27 @@
       <div class="section-head">
         <div class="section-kicker">Get Started</div>
         <h2>Download DashUI and start diagnostics.</h2>
-        <p>Download the current public build from Google Drive. The file is hosted with direct download support and click tracking via GoatCounter for analytics.</p>
+        <p>Install the latest public Android build and connect to your vehicle with a compatible OBD-II adapter.</p>
       </div>
 
       <div class="download-panel">
         <article class="download-card">
           <h3>Current DashUI Build</h3>
-          <p>Download the latest public version hosted on Google Drive. The download link uses the file ID, so it remains stable even if the file is renamed in Drive.</p>
+          <p>Get the latest public DashUI release for Android.</p>
           <div class="actions">
             <a class="button primary" href="downloads.html">View Download Options</a>
-            <a class="button" href="https://drive.google.com/file/d/1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ/view?usp=drive_link" target="_blank" rel="noopener">Open Google Drive</a>
+            <a class="button" href="https://drive.google.com/file/d/1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ/view?usp=drive_link" target="_blank" rel="noopener">View Download</a>
           </div>
           <div class="download-stats">
-            <div class="download-stat"><b>Google Drive</b><span>Secure file hosting</span></div>
-            <div class="download-stat"><b>Direct Download</b><span>No third-party trackers</span></div>
+            <div class="download-stat"><b>Android</b><span>Native phone and tablet support</span></div>
+            <div class="download-stat"><b>Current Build</b><span>Latest public DashUI release</span></div>
           </div>
         </article>
 
         <aside class="download-meta-card">
-          <h3>How it works</h3>
-          <p>Click the download button to get the APK file directly from Google Drive. Installation is simple: enable unknown sources and install the APK on your Android device.</p>
-          <p>The download counter tracks button clicks from this page using GoatCounter analytics. Google Drive doesn't provide public download completion counts.</p>
+          <h3>Before you install</h3>
+          <p>DashUI currently ships as an Android APK. Your device may ask you to allow installation from your browser or file manager.</p>
+          <p>For live vehicle data, pair DashUI with a compatible Bluetooth or Wi-Fi OBD-II adapter.</p>
           <div class="actions" style="margin-top: 18px;">
             <a class="button secondary" href="downloads.html">Learn About Setup</a>
           </div>
@@ -1117,7 +1184,7 @@
   </main>
 
   <footer class="page">
-    <p>DashUI — OBD-II diagnostics for people who want their car to tell the truth.</p>
+    <p>DashUI: OBD-II Diagnostics, built for people who want their car to tell the truth.</p>
 <div class="footer-links" aria-label="Footer navigation">
       <a href="editor.html">Editor</a>
       <a href="downloads.html">Downloads</a>

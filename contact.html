@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Contact DashUI OBD-II for support, privacy questions, diagnostics feedback, adapter compatibility reports, and business inquiries." />
-  <title>Contact | DashUI OBD-II</title>
+  <meta name="description" content="Contact DashUI: OBD-II Diagnostics for support, privacy questions, adapter compatibility reports, and business inquiries." />
+  <title>Contact | DashUI: OBD-II Diagnostics</title>
 
   <style>
     :root {
@@ -414,7 +414,7 @@
         width: 100%;
       }
     }
-  
+
 
     /* ============== uniform DashUI site header ============== */
     .site-header {
@@ -573,6 +573,8 @@
     }
 
   </style>
+  <link rel="stylesheet" href="assets/site.css" />
+  <script src="assets/site.js" defer></script>
 </head>
 
 <body>
@@ -601,7 +603,7 @@
       <span class="eyebrow">Contact DashUI</span>
       <h1 id="contact-title">Support, feedback, and diagnostics help.</h1>
       <p class="lead">
-        Reach out for DashUI OBD-II support, adapter compatibility reports, diagnostics feedback,
+        Reach out for DashUI: OBD-II Diagnostics support, adapter compatibility reports, diagnostics feedback,
         privacy questions, or business inquiries.
       </p>
     </section>
@@ -610,7 +612,7 @@
       <section class="card" aria-labelledby="contact-methods-title">
         <h2 id="contact-methods-title">Contact information</h2>
         <p>
-          The fastest way to reach DashUI OBD-II is by email. Please include your vehicle year, make,
+          The fastest way to reach DashUI is by email. Please include your vehicle year, make,
           model, adapter model, phone/device model, and a brief description of the issue when contacting support.
         </p>
 
@@ -664,9 +666,9 @@
 
   <footer>
     <div class="footer-inner">
-      <span>&copy; 2026 DashUI OBD-II. All rights reserved.</span>
+      <span>&copy; 2026 DashUI.</span>
 <span class="site-counter" aria-label="Page visit counter">
-        Page visits: <strong class="counter-value" data-page-visit-count>Counter setup needed</strong>
+        Page visits: <strong class="counter-value" data-page-visit-count>Unavailable</strong>
       </span>
       <span>
         <a href="/">Home</a> ·
@@ -679,12 +681,12 @@
 
 <script>
   (function () {
-    const GOATCOUNTER_CODE = "YOUR-GOATCOUNTER-CODE"; // Example after signup: "dashuiobd"
+    const GOATCOUNTER_CODE = "dashuiobd";
     const counterTarget = document.querySelector("[data-page-visit-count]");
     if (!counterTarget) return;
 
     if (!GOATCOUNTER_CODE || GOATCOUNTER_CODE === "YOUR-GOATCOUNTER-CODE") {
-      counterTarget.textContent = "Counter setup needed";
+      counterTarget.textContent = "Unavailable";
       return;
     }
 
@@ -714,7 +716,7 @@
     setTimeout(function () {
       clearInterval(waitForCounter);
       if (!counterTarget.textContent.trim()) {
-        counterTarget.textContent = "Visit count unavailable";
+        counterTarget.textContent = "Unavailable";
       }
     }, 5000);
   })();

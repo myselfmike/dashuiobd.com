@@ -1,0 +1,1645 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>DashUI Cluster</title>
+<link rel="stylesheet" href="cluster-fonts.css" />
+<style>
+  :root {
+    --plex-sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --plex-cond: 'IBM Plex Sans Condensed', 'IBM Plex Sans', sans-serif;
+    --plex-mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --bg: #07080b;
+    --text: #f2f4f7;
+    --muted: #8b919c;
+    --divider: #2a2d33;
+    --red: #ef4444;
+    --theme: #22d3ee;
+    --theme-bright: #67e8f9;
+    --theme-dim: rgba(34, 211, 238, 0.20);
+    --theme-faint: rgba(34, 211, 238, 0.06);
+    --text-color: #f2f4f7;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: #03060a;
+    font-family: var(--plex-sans);
+    font-feature-settings: "tnum" on, "lnum" on;
+  }
+  #cluster {
+    position: fixed;
+    inset: 0;
+    background: #03060a;
+    isolation: isolate;
+  }
+  body[data-hud-mode="on"] #cluster {
+    transform: scaleX(-1);
+    background: #000;
+  }
+  body[data-hud-mode="on"] #slot-1 *,
+  body[data-hud-mode="on"] #slot-2 *,
+  body[data-hud-mode="on"] #slot-3 *,
+  body[data-hud-mode="on"] #slot-4 * {
+    filter: none !important;
+  }
+  body[data-hud-mode="on"] .grid,
+  body[data-hud-mode="on"] .vignette {
+    display: none !important;
+  }
+  body[data-hud-mode="on"] .chip.exit {
+    background: transparent !important;
+    color: #dc143c !important;
+    border-color: #dc143c !important;
+    box-shadow: none !important;
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--theme-faint) 1px, transparent 1px),
+      linear-gradient(90deg, var(--theme-faint) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at 50% 60%, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 78%);
+  }
+  .vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(0,0,0,0.7) 92%);
+    pointer-events: none;
+  }
+  svg.layer {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+  }
+  .chrome { position: absolute; inset: 0; pointer-events: none; }
+  .chip {
+    position: absolute;
+    font-family: var(--plex-cond);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 3px;
+    color: var(--text-color);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--theme-dim);
+    pointer-events: auto;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .chip.exit {
+    top: 24px; left: 19px;
+    background: transparent;
+    color: #dc143c;
+    border-color: #dc143c;
+    box-shadow: none;
+  }
+  .chip.set {
+    top: 16px; right: 16px;
+    width: 48px; height: 48px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    color: var(--theme);
+  }
+  .chip.set svg {
+    width: 32px; height: 32px;
+    display: block;
+  }
+  #toggle-sim {
+    position: absolute;
+    top: 24px; left: 78px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    pointer-events: auto;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .sim-toggle-label {
+    font-family: var(--plex-cond);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .sim-toggle-track {
+    width: 36px; height: 20px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--theme-dim);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .sim-toggle-knob {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+  }
+  body[data-sim="yes"] .sim-toggle-label { color: var(--text-color); }
+  body[data-sim="yes"] .sim-toggle-track { border-color: var(--theme); }
+  body[data-sim="yes"] .sim-toggle-knob {
+    left: 21px;
+    background: var(--theme);
+    filter: url(#text-glow);
+  }
+  body[data-hud-mode="on"] #toggle-sim { display: none !important; }
+</style>
+</head>
+<body>
+<div id="cluster">
+  <div class="grid"></div>
+  <div class="vignette"></div>
+  <svg class="layer" id="cluster-svg" viewBox="0 0 1843 853" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <filter id="seg-glow" filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="6000" height="6000">
+        <feGaussianBlur stdDeviation="3.5"/>
+        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="text-glow" filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="6000" height="6000">
+        <feGaussianBlur stdDeviation="2"/>
+        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <g id="tach"></g>
+    <g id="slot-1"></g>
+    <g id="slot-2"></g>
+    <g id="slot-3"></g>
+    <g id="slot-4"></g>
+  </svg>
+  <div class="chrome">
+    <div class="chip exit" id="chip-exit">EXIT</div>
+    <div id="toggle-sim">
+      <span class="sim-toggle-label">SIMULATION</span>
+      <div class="sim-toggle-track">
+        <div class="sim-toggle-knob"></div>
+      </div>
+    </div>
+    <div class="chip set" id="chip-set" aria-label="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    </div>
+  </div>
+</div>
+<script>
+//  ============================================================
+//  STATE
+//  ============================================================
+const defaults = {
+  "tachArcX": 845,
+  "tachArcY": 1762.544176316908,
+  "tachBarX": 42.270000000000095,
+  "tachBarY": 105,
+  "gauge1X": 200, "gauge1Y": 650,
+  "gauge2X": 655, "gauge2Y": 570,
+  "gauge3X": 1188, "gauge3Y": 570,
+  "gauge4X": 1643, "gauge4Y": 650,
+  "gaugeSmallSize": 350,
+  "gaugeLargeSize": 510,
+  "archStartH": 46, "archEndH": 224,
+  "barH": 100,
+  "tachArcWidthPct": 84, "tachBarWidthPct": 95,
+  "layout": "balanced", "tach": "arc",
+  "hudMode": false, "editMode": false,
+  "needlesEnabled": false, "needleCenterReadout": false,
+  "gauge1Enabled": true, "gauge2Enabled": true,
+  "gauge3Enabled": true, "gauge4Enabled": true,
+  "gauge1Sensor": null, "gauge2Sensor": null,
+  "gauge3Sensor": null, "gauge4Sensor": null,
+  "archHalfDeg": 27.5, "archGrowthExp": 3.9,
+  "archSegThickness": 0.82, "archSegTilt": 24,
+  "archSegTiltExp": 1, "archLabelOffset": 27,
+  "barGap": 4, "segCount": 50,
+  "tachLabelFontSize": 30, "tachBarLabelDy": 0,
+  "tachHeaderSize": 12, "tachHeaderDy": 0,
+  "gauge1LabelDx": 0, "gauge1LabelDy": 100, "gauge1LabelSize": 28,
+  "gauge1ValueDx": 0, "gauge1ValueDy": 38,  "gauge1ValueSize": 110,
+  "gauge1UnitDx": 0,  "gauge1UnitDy": 50,   "gauge1UnitSize": 24,
+  "gauge2LabelDx": 0, "gauge2LabelDy": 180, "gauge2LabelSize": 32,
+  "gauge2ValueDx": 0, "gauge2ValueDy": 47,   "gauge2ValueSize": 140,
+  "gauge2UnitDx": 0,  "gauge2UnitDy": -100,  "gauge2UnitSize": 14,
+  "gauge3LabelDx": 0, "gauge3LabelDy": 180, "gauge3LabelSize": 32,
+  "gauge3ValueDx": 0, "gauge3ValueDy": 46.8351546421635,   "gauge3ValueSize": 140,
+  "gauge3UnitDx": 0,  "gauge3UnitDy": 62,    "gauge3UnitSize": 14,
+  "gauge4LabelDx": 0, "gauge4LabelDy": 100,  "gauge4LabelSize": 28,
+  "gauge4ValueDx": 0, "gauge4ValueDy": 38,   "gauge4ValueSize": 110,
+  "gauge4UnitDx": 0,  "gauge4UnitDy": 63,    "gauge4UnitSize": 24,
+  "gauge1ScaleSize": 22, "gauge1ScaleMin": null, "gauge1ScaleMax": null,
+  "gauge2ScaleSize": 24, "gauge2ScaleMin": null, "gauge2ScaleMax": null,
+  "gauge3ScaleSize": 24, "gauge3ScaleMin": null, "gauge3ScaleMax": null,
+  "gauge4ScaleSize": 22, "gauge4ScaleMin": null, "gauge4ScaleMax": null,
+  "gaugeScaleInset": 58,
+  "gaugeGlowEnabled": true,
+  "gaugeGlowColor": "#22C55E",
+  "landscapeHome": false,
+  "theme": "#22d3ee", "text": "#f2f4f7",
+  "rpm": 0, "redline": 6500, "maxRpm": 8000,
+  "speed": 0, "boost": 0, "baro": 101,
+  "coolant": 80, "oilTemp": 90, "avgMpg": 0, "instantMpg": 0, "fuelLevel": 65, "throttle": 0,
+  "shape": "circle", "unitSystem": "metric",
+  "selectedGauge": 0,
+  "snapToGrid": false, "gridSize": 20, "editorMode": "classic",
+  "tachWidthPct": 80,
+  "fuelOpacity": 0.55, "fuelStiffness": 24,
+  "fuelDamping": 2.6,  "fuelWaveAmp": 0.4,
+  "ecoGrowthMax": 70,  "ecoSwayIntensity": 1,
+  "ecoTrunkW": 6,      "ecoTrunkH": 14, "ecoCanopyR": 15
+};
+
+const ROTATIONS = [0, 90, 180, 270];
+const VIEWBOX = {
+  0:   { w: 853,  h: 1843 },
+  90:  { w: 1843, h: 853  },
+  180: { w: 853,  h: 1843 },
+  270: { w: 1843, h: 853  },
+};
+
+const POSITIONAL_KEYS_LIST = [
+  'tachArcX','tachArcY','tachBarX','tachBarY',
+  'gauge1X','gauge1Y','gauge2X','gauge2Y','gauge3X','gauge3Y','gauge4X','gauge4Y',
+  'gaugeSmallSize','gaugeLargeSize',
+  'archStartH','archEndH','barH','tachArcWidthPct','tachBarWidthPct',
+];
+const BROADCAST_KEYS_LIST = [
+  'layout','tach','hudMode','editMode','needlesEnabled','needleCenterReadout',
+  'gauge1Enabled','gauge2Enabled','gauge3Enabled','gauge4Enabled',
+  'gauge1Sensor','gauge2Sensor','gauge3Sensor','gauge4Sensor',
+  'archHalfDeg','archGrowthExp','archSegThickness','archSegTilt','archSegTiltExp','archLabelOffset',
+  'barGap','segCount','tachLabelFontSize','tachBarLabelDy','tachHeaderSize','tachHeaderDy',
+  'gauge1LabelDx','gauge1LabelDy','gauge1LabelSize','gauge1ValueDx','gauge1ValueDy','gauge1ValueSize','gauge1UnitDx','gauge1UnitDy','gauge1UnitSize',
+  'gauge2LabelDx','gauge2LabelDy','gauge2LabelSize','gauge2ValueDx','gauge2ValueDy','gauge2ValueSize','gauge2UnitDx','gauge2UnitDy','gauge2UnitSize',
+  'gauge3LabelDx','gauge3LabelDy','gauge3LabelSize','gauge3ValueDx','gauge3ValueDy','gauge3ValueSize','gauge3UnitDx','gauge3UnitDy','gauge3UnitSize',
+  'gauge4LabelDx','gauge4LabelDy','gauge4LabelSize','gauge4ValueDx','gauge4ValueDy','gauge4ValueSize','gauge4UnitDx','gauge4UnitDy','gauge4UnitSize',
+  'gauge1ScaleSize','gauge1ScaleMin','gauge1ScaleMax','gauge2ScaleSize','gauge2ScaleMin','gauge2ScaleMax',
+  'gauge3ScaleSize','gauge3ScaleMin','gauge3ScaleMax','gauge4ScaleSize','gauge4ScaleMin','gauge4ScaleMax','gaugeScaleInset',
+];
+const POSITIONAL_SET = new Set(POSITIONAL_KEYS_LIST);
+const BROADCAST_SET  = new Set(BROADCAST_KEYS_LIST);
+const PER_ROTATION_ALL = [...POSITIONAL_KEYS_LIST, ...BROADCAST_KEYS_LIST];
+const PER_ROTATION_ALL_SET = new Set(PER_ROTATION_ALL);
+
+const PORTRAIT_POSITIONAL = {
+  "tachArcX": 402, "tachArcY": 1063.1834091403684,
+  "tachBarX": 70,  "tachBarY": 245,
+  "gauge1X": 635,  "gauge1Y": 1420,
+  "gauge2X": 220,  "gauge2Y": 825,
+  "gauge3X": 630.0218978842452, "gauge3Y": 825,
+  "gauge4X": 215,  "gauge4Y": 1420,
+  "gaugeSmallSize": 342, "gaugeLargeSize": 392,
+  "archStartH": 50, "archEndH": 110, "barH": 80,
+  "tachArcWidthPct": 83, "tachBarWidthPct": 83, "tachWidthPct": 83
+};
+
+function makeRotationConfig(rotation) {
+  const cfg = {};
+  for (const k of PER_ROTATION_ALL) cfg[k] = defaults[k];
+  if (rotation === 0 || rotation === 180) Object.assign(cfg, PORTRAIT_POSITIONAL);
+  return cfg;
+}
+
+const realState = {
+  activeRotation: 90,
+  rotations: {
+    0:   makeRotationConfig(0),
+    90:  makeRotationConfig(90),
+    180: makeRotationConfig(180),
+    270: makeRotationConfig(270),
+  },
+};
+for (const k of Object.keys(defaults)) {
+  realState[k] = PER_ROTATION_ALL_SET.has(k)
+    ? realState.rotations[90][k]
+    : defaults[k];
+}
+
+let suppressRouting = false;
+let renderPending = false;
+const state = new Proxy(realState, {
+  set(t, key, value) {
+    t[key] = value;
+    if (!suppressRouting && typeof key === 'string') {
+      if (POSITIONAL_SET.has(key))     t.rotations[t.activeRotation][key] = value;
+      else if (BROADCAST_SET.has(key)) for (const r of ROTATIONS) t.rotations[r][key] = value;
+    }
+    if (!renderPending) {
+      renderPending = true;
+      requestAnimationFrame(() => { renderPending = false; if (typeof render === 'function') render(); });
+    }
+    // Notify Kotlin about persisted-field changes so it can capture an undo
+    // restore point before subsequent mutations. Suppressed during bulk reloads
+    // (suppressRouting) , applyConfig / activateRotation / restoreState push a
+    // single snapshot at the end of their batch instead.
+    if (!suppressRouting && typeof key === 'string'
+        && window.DashUI && window.DashUI.PERSISTENT_SET
+        && (window.DashUI.PERSISTENT_SET.has(key) || POSITIONAL_SET.has(key) || BROADCAST_SET.has(key))) {
+      if (typeof window.DashUI.pushSnapshotToKotlin === 'function') {
+        window.DashUI.pushSnapshotToKotlin();
+      }
+    }
+    return true;
+  }
+});
+
+function activateRotation(r) {
+  suppressRouting = true;
+  state.activeRotation = r;
+  const cfg = state.rotations[r];
+  for (const k in cfg) state[k] = cfg[k];
+  suppressRouting = false;
+  const vb = VIEWBOX[r];
+  const svg = document.getElementById('cluster-svg');
+  if (svg) svg.setAttribute('viewBox', `0 0 ${vb.w} ${vb.h}`);
+}
+
+//  ============================================================
+//  PEAKS
+//  ============================================================
+const peaks = {};
+function bumpPeak(metric, value) {
+  const numeric = finiteOrNull(value);
+  if (numeric == null) return;
+  const now = performance.now();
+  const p = peaks[metric];
+  if (!p) { peaks[metric] = { value: numeric, lastBumpMs: now }; return; }
+  const decayed = getDecayedValue(metric);
+  if (numeric >= decayed) peaks[metric] = { value: numeric, lastBumpMs: now };
+}
+function getDecayedValue(metric) {
+  const p = peaks[metric];
+  if (!p) return 0;
+  const age = performance.now() - p.lastBumpMs;
+  if (age < 2000) return p.value;
+  const decay = Math.max(0, 1 - (age - 2000) / 1200);
+  return p.value * decay;
+}
+function getPeakFraction(metric, currentValue, min, range) {
+  const current = finiteOrNull(currentValue);
+  if (current == null) return null;
+  const decayed = getDecayedValue(metric);
+  if (decayed <= current + range * 0.015) return null;
+  return (decayed - min) / range;
+}
+
+//  ============================================================
+//  HELPERS
+//  ============================================================
+const svgNS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs = {}, children = []) {
+  const n = document.createElementNS(svgNS, tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  for (const c of children) n.appendChild(c);
+  return n;
+}
+function txt(tag, attrs, text) {
+  const n = el(tag, attrs);
+  n.textContent = text;
+  return n;
+}
+function resolvedGaugeUnitDy(slot) {
+  const valueDy   = Number(state[`gauge${slot}ValueDy`]  || 0);
+  const valueSize = Number(state[`gauge${slot}ValueSize`] || 0);
+  const labelDy   = Number(state[`gauge${slot}LabelDy`]  || 0);
+  const labelSize = Number(state[`gauge${slot}LabelSize`] || 0);
+  const unitDy    = Number(state[`gauge${slot}UnitDy`]   || 0);
+  const unitSize  = Number(state[`gauge${slot}UnitSize`]  || 0);
+  if (unitDy <= valueDy) return unitDy;
+  let minClearUnitDy = valueDy + valueSize * 0.48 + unitSize * 0.82 + 6;
+  if (labelDy > valueDy) {
+    const minBelowLabelDy = labelDy + labelSize * 0.90 + unitSize * 0.82 + 4;
+    minClearUnitDy = Math.max(minClearUnitDy, minBelowLabelDy);
+  }
+  return Math.max(unitDy, minClearUnitDy);
+}
+function lighten(hex, amt = 0.4) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  const lr = Math.round(r+(255-r)*amt), lg = Math.round(g+(255-g)*amt), lb = Math.round(b+(255-b)*amt);
+  return `#${lr.toString(16).padStart(2,'0')}${lg.toString(16).padStart(2,'0')}${lb.toString(16).padStart(2,'0')}`;
+}
+function rgba(hex, a) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+function resolvedGaugeGlowColor() {
+  return (state.gaugeGlowEnabled && state.gaugeGlowColor) ? state.gaugeGlowColor : state.theme;
+}
+function gaugeGlowOpacity(alpha) {
+  return state.gaugeGlowEnabled ? alpha : 0;
+}
+function applyTheme() {
+  document.documentElement.style.setProperty('--theme', state.theme);
+  document.documentElement.style.setProperty('--theme-bright', state.text);
+  document.documentElement.style.setProperty('--theme-dim',   rgba(state.theme, 0.22));
+  document.documentElement.style.setProperty('--theme-faint', rgba(state.theme, 0.06));
+  document.documentElement.style.setProperty('--text-color',  state.text);
+}
+
+//  ============================================================
+//  SENSOR METADATA & LAYOUTS
+//  ============================================================
+const SPEED_SCALE_MAX_MPH = 240, SPEED_SCALE_MAX_KPH = 240;
+function activeSpeedScaleMaxBase() {
+  return currentUnits.speed === 'mph' ? mphToKph(SPEED_SCALE_MAX_MPH) : SPEED_SCALE_MAX_KPH;
+}
+const KPA_TO_PSI = 0.145038;
+const KPA_TO_INHG = 0.295300;
+function finiteOrNull(value) {
+  if (value === null || value === undefined) return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+function roundOrNull(value) {
+  const n = finiteOrNull(value);
+  return n == null ? null : Math.round(n);
+}
+function fractionOrNull(value, min, max) {
+  const n = finiteOrNull(value);
+  if (n == null) return null;
+  return (n - min) / ((max - min) || 1);
+}
+function boostVacuumKpa(pressureKpa, baroKpa) {
+  const pressure = finiteOrNull(pressureKpa);
+  if (pressure == null) return null;
+  const baro = finiteOrNull(baroKpa) ?? 101;
+  return pressure + (101 - baro);
+}
+function boostVacuumSpec(pressureKpa = state.boost, baroKpa = state.baro) {
+  const relKpa = boostVacuumKpa(pressureKpa, baroKpa);
+  if (relKpa == null) {
+    return {
+      label: 'BOOST/VAC',
+      unit: '',
+      min: 0,
+      max: 1,
+      value: null,
+      decimals: 1,
+      scaleDecimals: 0,
+      peakKey: 'boost'
+    };
+  }
+  if (relKpa < 0) {
+    return {
+      label: 'VACUUM',
+      unit: 'IN/HG',
+      min: 0,
+      max: 30,
+      value: Math.abs(relKpa) * KPA_TO_INHG,
+      decimals: 1,
+      scaleDecimals: 0,
+      peakKey: 'vacuum'
+    };
+  }
+  const isPsi = currentUnits.pressure === 'psi';
+  return {
+    label: 'BOOST',
+    unit: isPsi ? 'PSI' : 'BAR',
+    min: 0,
+    max: isPsi ? 20 : 1.5,
+    value: isPsi ? relKpa * KPA_TO_PSI : relKpa / 100,
+    decimals: isPsi ? 1 : 2,
+    scaleDecimals: isPsi ? 0 : 1,
+    peakKey: 'boost'
+  };
+}
+const SENSOR_MAP = {
+  'coolant': {
+    get label() { return 'COOLANT'; },
+    get unit()  { return currentUnits.temperature === 'f' ? '°F' : '°C'; },
+    get min()   { return currentUnits.temperature === 'f' ? 140 : 60; },
+    get max()   { return currentUnits.temperature === 'f' ? 248 : 120; },
+    raw:          () => toDisplayTemp(state.coolant),
+    val:          () => Math.round(toDisplayTemp(state.coolant)),
+    fraction:     () => { const mn = currentUnits.temperature === 'f' ? 140 : 60; const range = currentUnits.temperature === 'f' ? 108 : 60; return (toDisplayTemp(state.coolant) - mn) / range; },
+    peakFraction: () => { const mn = currentUnits.temperature === 'f' ? 140 : 60; const range = currentUnits.temperature === 'f' ? 108 : 60; return getPeakFraction('coolant', toDisplayTemp(state.coolant), mn, range); }
+  },
+  'rpm':      { label:'RPM',      unit:'',    min:0,   max:()=>state.maxRpm, raw:()=>state.rpm, val:()=>Math.round(state.rpm), fraction:()=>state.rpm/state.maxRpm, redFraction:()=>state.redline/state.maxRpm, peakFraction:()=>getPeakFraction('rpm',state.rpm,0,state.maxRpm) },
+  'speed': {
+    get label()  { return 'SPEED'; },
+    get unit()   { return currentUnits.speed === 'mph' ? 'MPH' : 'KPH'; },
+    get min()    { return 0; },
+    get max()    { return currentUnits.speed === 'mph' ? activeSpeedScaleMaxBase() * 0.621371 : activeSpeedScaleMaxBase(); },
+    raw:          () => toDisplaySpeed(state.speed),
+    val:          () => Math.round(toDisplaySpeed(state.speed)),
+    fraction:     () => { const mx = currentUnits.speed === 'mph' ? activeSpeedScaleMaxBase() * 0.621371 : activeSpeedScaleMaxBase(); return toDisplaySpeed(state.speed) / mx; },
+    peakFraction: () => { const mx = currentUnits.speed === 'mph' ? activeSpeedScaleMaxBase() * 0.621371 : activeSpeedScaleMaxBase(); return getPeakFraction('speed', toDisplaySpeed(state.speed), 0, mx); }
+  },
+  'fuel':     { label:'FUEL',     unit:'%',   min:0,   max:100, raw:()=>state.fuelLevel, val:()=>roundOrNull(state.fuelLevel), fraction:()=>fractionOrNull(state.fuelLevel,0,100), centerGlyph:(x,y,s,i)=>state.fuelLevel == null ? null : fuelLiquidGlyph(x,y,Math.round(state.fuelLevel),s,i), peakFraction:()=>state.fuelLevel == null ? null : getPeakFraction('fuel',state.fuelLevel,0,100) },
+  'boost': {
+    get label()  { return boostVacuumSpec().label; },
+    get unit()   { return boostVacuumSpec().unit; },
+    get min()    { return boostVacuumSpec().min; },
+    get max()    { return boostVacuumSpec().max; },
+    raw:          () => boostVacuumSpec().value,
+    val:          () => { const spec = boostVacuumSpec(); return spec.value == null ? null : Number(spec.value.toFixed(spec.decimals)); },
+    fraction:     () => { const spec = boostVacuumSpec(); return spec.value == null ? null : (spec.value - spec.min) / ((spec.max - spec.min) || 1); },
+    peakKey:      () => boostVacuumSpec().peakKey
+  },
+  'oil': {
+    get label()  { return 'OIL'; },
+    get unit()   { return currentUnits.temperature === 'f' ? '°F' : '°C'; },
+    get min()    { return currentUnits.temperature === 'f' ? 158 : 70; },
+    get max()    { return currentUnits.temperature === 'f' ? 266 : 130; },
+    raw:          () => toDisplayTemp(state.oilTemp),
+    val:          () => roundOrNull(toDisplayTemp(state.oilTemp)),
+    fraction:     () => { const mn = currentUnits.temperature === 'f' ? 158 : 70; const range = currentUnits.temperature === 'f' ? 108 : 60; return fractionOrNull(toDisplayTemp(state.oilTemp), mn, mn + range); },
+    redFraction:  () => 0.85,
+    peakFraction: () => { const mn = currentUnits.temperature === 'f' ? 158 : 70; const range = currentUnits.temperature === 'f' ? 108 : 60; const v = toDisplayTemp(state.oilTemp); return v == null ? null : getPeakFraction('oil', v, mn, range); }
+  },
+  'mpg-avg': {
+    get label()  { return currentUnits.fuelEconomy === 'mpg' ? 'AVG MPG' : 'AVG L/100'; },
+    get unit()   { return currentUnits.fuelEconomy === 'mpg' ? 'MPG' : 'L/100km'; },
+    get min()    { return 0; },
+    get max()    { return currentUnits.fuelEconomy === 'mpg' ? 60 : 20; },
+    fraction:     () => { const mx = currentUnits.fuelEconomy === 'mpg' ? 60 : 20; return toDisplayMpg(state.avgMpg) / mx; },
+    centerGlyph:  (x, y, s, i) => ecoTreeGlyph(x, y - 18, state.avgMpg, i),
+    peakFraction: () => { const mx = currentUnits.fuelEconomy === 'mpg' ? 60 : 20; return getPeakFraction('mpg-avg', toDisplayMpg(state.avgMpg), 0, mx); }
+  },
+  'mpg-inst': {
+    get label()  { return currentUnits.fuelEconomy === 'mpg' ? 'INST MPG' : 'INST L/100'; },
+    get unit()   { return currentUnits.fuelEconomy === 'mpg' ? 'MPG' : 'L/100km'; },
+    get min()    { return 0; },
+    get max()    { return currentUnits.fuelEconomy === 'mpg' ? 80 : 30; },
+    raw:          () => toDisplayMpg(state.instantMpg),
+    val:          () => Number(toDisplayMpg(state.instantMpg).toFixed(1)),
+    fraction:     () => { const mx = currentUnits.fuelEconomy === 'mpg' ? 80 : 30; return toDisplayMpg(state.instantMpg) / mx; },
+    peakFraction: () => { const mx = currentUnits.fuelEconomy === 'mpg' ? 80 : 30; return getPeakFraction('mpg-inst', toDisplayMpg(state.instantMpg), 0, mx); }
+  },
+  'throttle': { label:'THROTTLE', unit:'%', min:0, max:100, raw:()=>state.throttle, val:()=>state.throttle, fraction:()=>state.throttle/100, peakFraction:()=>getPeakFraction('throttle',state.throttle,0,100) },
+};
+const LAYOUT_DEFAULTS = {
+  balanced:    ['coolant','rpm',     'speed','fuel'],
+  performance: ['boost',  'rpm',     'speed','oil'],
+  economy:     ['mpg-avg','mpg-inst','speed','fuel'],
+};
+function isKnownLayout(layoutKey) {
+  return typeof layoutKey === 'string' && Object.prototype.hasOwnProperty.call(LAYOUT_DEFAULTS, layoutKey);
+}
+function applyBakedLayout(layoutKey) {
+  if (!isKnownLayout(layoutKey)) return;
+  if (state.layout === layoutKey) return;
+  state.layout = layoutKey;
+  for (let i = 1; i <= 4; i++) {
+    state[`gauge${i}Enabled`] = true;
+    state[`gauge${i}Sensor`] = null;
+    state[`gauge${i}ScaleMin`] = null;
+    state[`gauge${i}ScaleMax`] = null;
+  }
+}
+
+//  ============================================================
+//  UNIT SYSTEM
+//  ============================================================
+function kphToMph(v) { return v * 0.621371; }
+function mphToKph(v) { return v / 0.621371; }
+function displayValue(key, baseVal) {
+  if (baseVal == null) return baseVal;
+  if (key === 'speed') return toDisplaySpeed(baseVal);
+  if (key === 'coolant' || key === 'oil') return toDisplayTemp(baseVal);
+  if (key === 'mpg-avg' || key === 'mpg-inst') return toDisplayMpg(baseVal);
+  return baseVal;
+}
+function displayUnit(key) {
+  if (key === 'speed') return currentUnits.speed === 'mph' ? 'MPH' : 'KPH';
+  if (key === 'coolant' || key === 'oil') return currentUnits.temperature === 'f' ? '°F' : '°C';
+  if (key === 'mpg-avg' || key === 'mpg-inst') return currentUnits.fuelEconomy === 'mpg' ? 'MPG' : 'L/100km';
+  return null;
+}
+function scaleConverts(key) { return false; }
+function formatGaugeValue(key, baseVal) {
+  if (baseVal == null) return baseVal;
+  if (key === 'rpm') return baseVal;
+  if (key === 'boost') return baseVal;
+  if (key === 'mpg-avg' || key === 'mpg-inst') return Math.round(baseVal * 10) / 10;
+  return Math.round(baseVal);
+}
+function formatScaleLabel(key, value) {
+  if (key === 'boost') {
+    const decimals = boostVacuumSpec().scaleDecimals;
+    return Number(value).toFixed(decimals);
+  }
+  return Math.round(value);
+}
+
+//  ============================================================
+//  TACH
+//  ============================================================
+const NORMALIZED_LABELS = [0, 2000, 4000, 6000, 8000, 10000, 12000];
+const LABEL_MERGE_RPM = 350;
+
+function renderTach() {
+  const root = document.getElementById('tach');
+  root.innerHTML = '';
+  if (state.tach === 'bar') renderTachBar(root);
+  else renderTachArc(root);
+}
+function vbWidth() { return VIEWBOX[state.activeRotation].w; }
+
+function renderTachBar(root) {
+  const totalW = vbWidth() * (state.tachBarWidthPct / 100);
+  const xStart = state.tachBarX, xEnd = xStart + totalW;
+  const y = state.tachBarY, barH = state.barH, gap = state.barGap;
+  const segW = (totalW - gap * (state.segCount - 1)) / state.segCount;
+  const lit = Math.round((state.rpm / state.maxRpm) * state.segCount);
+  const redlineSegIdx = Math.round((state.redline / state.maxRpm) * state.segCount);
+  for (let i = 0; i < state.segCount; i++) {
+    const isRed = i >= redlineSegIdx, on = i < lit;
+    const x = xStart + i * (segW + gap);
+    root.appendChild(el('rect', {
+      x, y, width: segW, height: barH, rx: 1,
+      fill: on ? (isRed ? '#ef4444' : state.theme) : 'transparent',
+      stroke: isRed ? rgba('#ef4444',0.4) : rgba(state.theme,0.4),
+      'stroke-width': 0.75, opacity: on ? 0.92 : 1,
+      filter: on ? 'url(#seg-glow)' : ''
+    }));
+  }
+  const peakRpm = getDecayedValue('rpm');
+  if (peakRpm > state.rpm + state.maxRpm * 0.015) {
+    const px = xStart + (peakRpm / state.maxRpm) * totalW;
+    root.appendChild(el('line', { x1:px, y1:y-6, x2:px, y2:y+barH+6, stroke:'#fff', 'stroke-width':2, filter:'url(#text-glow)' }));
+  }
+  const cx2 = xStart + (state.rpm / state.maxRpm) * totalW;
+  root.appendChild(el('line', { x1:cx2, y1:y-8, x2:cx2, y2:y-2, stroke:state.theme, 'stroke-width':2 }));
+  renderTachLabels(root, xStart, totalW, y + barH + 18 + state.tachBarLabelDy, false);
+}
+
+function renderTachArc(root) {
+  const totalW = vbWidth() * (state.tachArcWidthPct / 100);
+  const cx = state.tachArcX;
+  const half = state.archHalfDeg * Math.PI / 180;
+  const rInner = (totalW / 2) / Math.sin(half);
+  const startH = state.archStartH, endH = state.archEndH;
+  const cy = state.tachArcY;
+  const startA = -Math.PI/2 - half, endA = -Math.PI/2 + half;
+  const redlineSegIdx = Math.round((state.redline / state.maxRpm) * state.segCount);
+  const warningSegIdx = redlineSegIdx - 3;
+  const lit = Math.round((state.rpm / state.maxRpm) * state.segCount);
+  const maxTilt = state.archSegTilt * Math.PI / 180;
+  const N = state.segCount;
+  const segGroup = el('g', {});
+  root.appendChild(segGroup);
+  for (let i = 0; i < N; i++) {
+    const t0 = i / N, t1 = (i + state.archSegThickness) / N, tMid = (t0 + t1) / 2;
+    const a0 = startA + (endA - startA) * t0, a1 = startA + (endA - startA) * t1;
+    const h = startH + Math.pow(tMid, state.archGrowthExp) * (endH - startH);
+    const rOuter = rInner + h;
+    const tilt = Math.pow(tMid, state.archSegTiltExp) * maxTilt;
+    const dA = Math.tan(tilt) * h / rOuter;
+    const blx = cx + rInner*Math.cos(a0), bly = cy + rInner*Math.sin(a0);
+    const brx = cx + rInner*Math.cos(a1), bry = cy + rInner*Math.sin(a1);
+    const tlx = cx + rOuter*Math.cos(a0+dA), tly = cy + rOuter*Math.sin(a0+dA);
+    const trx = cx + rOuter*Math.cos(a1+dA), tryY = cy + rOuter*Math.sin(a1+dA);
+    const d = `M ${blx},${bly} A ${rInner},${rInner} 0 0 1 ${brx},${bry} L ${trx},${tryY} A ${rOuter},${rOuter} 0 0 0 ${tlx},${tly} Z`;
+    const isRed = i >= redlineSegIdx, isWarning = i >= warningSegIdx && i < redlineSegIdx, on = i < lit;
+    const fill = on ? (isRed ? '#ef4444' : (isWarning ? '#fb923c' : state.theme)) : 'transparent';
+    segGroup.appendChild(el('path', {
+      d, fill,
+      stroke: isRed ? rgba('#ef4444',0.4) : (isWarning ? rgba('#fb923c',0.4) : rgba(state.theme,0.4)),
+      'stroke-width': 0.75, opacity: on ? 0.92 : 1,
+      filter: on ? 'url(#seg-glow)' : ''
+    }));
+  }
+  const peakRpm = getDecayedValue('rpm');
+  if (peakRpm > state.rpm + state.maxRpm * 0.015) {
+    const t = peakRpm / state.maxRpm;
+    const i = Math.min(N-1, Math.max(0, t*N));
+    const tilt = Math.pow(t, state.archSegTiltExp) * maxTilt;
+    const tMidPeak = i/N + state.archSegThickness/2/N;
+    const a = startA + (endA - startA) * tMidPeak;
+    const h = startH + Math.pow(tMidPeak, state.archGrowthExp) * (endH - startH) + 14;
+    const rOut = rInner + h;
+    const dA = Math.tan(tilt) * h / rOut;
+    const rIn = rInner - 4;
+    const x1 = cx + rIn*Math.cos(a), y1 = cy + rIn*Math.sin(a);
+    const x2 = cx + rOut*Math.cos(a+dA), y2 = cy + rOut*Math.sin(a+dA);
+    segGroup.appendChild(el('line', { x1, y1, x2, y2, stroke:'#fff', 'stroke-width':2, filter:'url(#text-glow)' }));
+  }
+  renderTachLabels(root, cx - totalW/2, totalW, 0, true, cx, cy, rInner, startA, endA);
+}
+
+function renderTachLabels(root, xStart, totalW, y, arc, cx, cy, rInner, startA, endA) {
+  const ticks = NORMALIZED_LABELS.filter(v => v <= state.maxRpm)
+    .map(v => ({ rpm:v, label:String(v/1000), red:v>=state.redline, normalized:true }));
+  const redlineVal = state.redline;
+  const redlineLabel = (redlineVal/1000).toFixed(redlineVal%1000===0?0:1);
+  let merged = false;
+  for (const t of ticks) {
+    if (Math.abs(t.rpm - redlineVal) < LABEL_MERGE_RPM) {
+      t.rpm = redlineVal; t.label = redlineLabel; t.red = true; merged = true; break;
+    }
+  }
+  if (!merged) ticks.push({ rpm:redlineVal, label:redlineLabel, red:true, normalized:false });
+  for (const t of ticks) {
+    if (t.rpm > state.maxRpm) continue;
+    if (arc) {
+      const tt = t.rpm / state.maxRpm;
+      const a = startA + (endA - startA) * tt;
+      const lr = rInner - state.archLabelOffset;
+      const x = cx + lr*Math.cos(a), yy = cy + lr*Math.sin(a);
+      root.appendChild(txt('text', {
+        x, y:yy, 'text-anchor':'middle', 'dominant-baseline':'middle',
+        'font-family':'IBM Plex Mono', 'font-weight':500, 'font-size':state.tachLabelFontSize,
+        fill: t.red ? '#ef4444' : state.text, opacity: t.red ? 0.98 : 0.92, 'letter-spacing':1
+      }, t.label));
+    } else {
+      const x = xStart + (t.rpm / state.maxRpm) * totalW;
+      root.appendChild(txt('text', {
+        x, y:y+8, 'text-anchor':'middle', 'dominant-baseline':'middle',
+        'font-family':'IBM Plex Mono', 'font-weight':500, 'font-size':Math.max(18,state.tachLabelFontSize-4),
+        fill: t.red ? '#ef4444' : state.text, opacity: t.red ? 0.98 : 0.88, 'letter-spacing':1
+      }, t.label));
+    }
+  }
+  if (!arc) {
+    root.appendChild(txt('text', {
+      x:xStart+totalW+14, y, 'text-anchor':'start',
+      'font-family':'IBM Plex Sans Condensed', 'font-size':11,
+      fill:state.text, opacity:0.45, 'letter-spacing':2
+    }, '×1K'));
+  }
+}
+
+//  ============================================================
+//  GAUGE SHAPES
+//  ============================================================
+const SQUIRCLE_EXPONENT = 4, SQUIRCLE_STEPS = 96, SQUIRCLE_PERIMETER_FACTOR = 7.0177;
+
+function superellipsePoint(cx, cy, r, theta, exponent = SQUIRCLE_EXPONENT) {
+  const ct = Math.cos(theta), st = Math.sin(theta), pow = 2/exponent;
+  return [cx + r*Math.sign(ct||1)*Math.pow(Math.abs(ct),pow), cy + r*Math.sign(st||1)*Math.pow(Math.abs(st),pow)];
+}
+function superellipseRayPoint(cx, cy, r, angle, exponent = SQUIRCLE_EXPONENT) {
+  const dx = Math.cos(angle), dy = Math.sin(angle);
+  const denom = Math.pow(Math.pow(Math.abs(dx),exponent)+Math.pow(Math.abs(dy),exponent),1/exponent)||1;
+  return [cx + dx*r/denom, cy + dy*r/denom];
+}
+function squirclePath(cx, cy, r, steps = SQUIRCLE_STEPS) {
+  const pts = [];
+  for (let i = 0; i < steps; i++) {
+    const theta = (-Math.PI/2) + (i/steps)*Math.PI*2;
+    pts.push(superellipsePoint(cx,cy,r,theta));
+  }
+  let d = `M ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) d += ` L ${pts[i][0]} ${pts[i][1]}`;
+  return d + ' Z';
+}
+function shapePath(shape, cx, cy, r) {
+  if (shape === 'circle')   return `M ${cx} ${cy-r} A ${r} ${r} 0 1 1 ${cx-0.001} ${cy-r} Z`;
+  if (shape === 'square')   return `M ${cx} ${cy-r} L ${cx+r} ${cy-r} L ${cx+r} ${cy+r} L ${cx-r} ${cy+r} L ${cx-r} ${cy-r} Z`;
+  return squirclePath(cx, cy, r);
+}
+function perimeterEstimate(shape, r) {
+  if (shape === 'circle') return 2*Math.PI*r;
+  if (shape === 'square') return 8*r;
+  return SQUIRCLE_PERIMETER_FACTOR*r;
+}
+
+//  ============================================================
+//  GAUGE DRAW HELPERS
+//  ============================================================
+const NEEDLE_SWEEP_START = 135*Math.PI/180;
+const NEEDLE_SWEEP_RANGE = 270*Math.PI/180;
+
+function gaugeSweepPoint(cx, cy, r, tt, inset = 0) {
+  const t = Math.max(0,Math.min(1,tt)), i = Math.max(0,inset);
+  const a = NEEDLE_SWEEP_START + t*NEEDLE_SWEEP_RANGE;
+  if (state.shape === 'square') {
+    const half = Math.max(1, r-i), dx = Math.cos(a), dy = Math.sin(a);
+    const scale = half / Math.max(Math.abs(dx), Math.abs(dy), 0.000001);
+    return { x:cx+dx*scale, y:cy+dy*scale, angle:a };
+  }
+  if (state.shape === 'squircle') {
+    const [x,y] = superellipseRayPoint(cx, cy, Math.max(1,r-i), a);
+    return { x, y, angle:a };
+  }
+  return { x:cx+(r-i)*Math.cos(a), y:cy+(r-i)*Math.sin(a), angle:a };
+}
+function normalizeSweepFraction(tt) {
+  const t = Math.max(0,Math.min(1,Number(tt)||0));
+  for (const v of [0,1/6,1/2,5/6,1]) if (Math.abs(t-v)<1e-9) return v;
+  return t;
+}
+function gaugeTickAttrs(cx, cy, r, tt, innerInset, outerInset) {
+  const t = normalizeSweepFraction(tt);
+  const p1 = gaugeSweepPoint(cx,cy,r,t,innerInset), p2 = gaugeSweepPoint(cx,cy,r,t,outerInset);
+  return { x1:p1.x, y1:p1.y, x2:p2.x, y2:p2.y };
+}
+function gaugeSweepPath(cx, cy, r, steps = 96) {
+  const pts = [];
+  for (let i = 0; i <= steps; i++) pts.push(gaugeSweepPoint(cx,cy,r,i/steps,0));
+  let d = `M ${pts[0].x} ${pts[0].y}`;
+  for (let i = 1; i < pts.length; i++) d += ` L ${pts[i].x} ${pts[i].y}`;
+  return d;
+}
+function gaugeSweepLengthEstimate(shape, r) { return perimeterEstimate(shape,r)*0.75; }
+function linearGaugeTickSpecs(totalDivisions = 48, majorEvery = 4) {
+  const out = [];
+  for (let i = 0; i <= totalDivisions; i++)
+    out.push({ tt:normalizeSweepFraction(i/totalDivisions), isMajor:(i%majorEvery===0)||(i===totalDivisions) });
+  return out;
+}
+function rpmGaugeTickSpecs(maxRpm, minorStep = 250) {
+  const max = Math.max(minorStep, Number(maxRpm)||8000);
+  const values = [];
+  for (let v = 0; v < max; v += minorStep) values.push(v);
+  if (values[values.length-1] !== max) values.push(max);
+  return values.map(v => {
+    const rpmAtTick = Math.min(max,v), tt = normalizeSweepFraction(rpmAtTick/max);
+    const exactRpm = tt*max, rpmMod1000 = ((exactRpm%1000)+1000)%1000, rpmMod500 = ((exactRpm%500)+500)%500;
+    const isMajor = (rpmMod1000<1e-6)||(Math.abs(rpmMod1000-1000)<1e-6)||(rpmAtTick===max);
+    const isMid = !isMajor&&((rpmMod500<1e-6)||(Math.abs(rpmMod500-500)<1e-6));
+    return { rpmAtTick:exactRpm, tt, isMajor, isMid };
+  });
+}
+function gaugeSweepAngle(tt) { return NEEDLE_SWEEP_START+Math.max(0,Math.min(1,tt))*NEEDLE_SWEEP_RANGE; }
+
+//  ============================================================
+//  DRAW GAUGE (digital)
+//  ============================================================
+function drawGauge(parent, opts) {
+  const { slot, sensorKey=null, x, y, size, label, value, unit, fraction, redFraction=null, peakFraction=null,
+          min, max, centerGlyph=null, sweep=true } = opts;
+  const r = size/2, cx = x, cy = y;
+  const digitalTrackW = Math.max(12, Math.min(18, r*0.08));
+  const digitalTrackR = Math.max(1, r-digitalTrackW/2);
+  const digitalTrackPath = gaugeSweepPath(cx,cy,digitalTrackR, state.shape==='square'?96:128);
+  const digitalTrackLen = gaugeSweepLengthEstimate(state.shape, digitalTrackR);
+
+  if (state.needlesEnabled && !centerGlyph && value != null) {
+    drawNeedleGauge(parent, slot, opts);
+    return;
+  }
+
+  const path = shapePath(state.shape, cx, cy, r);
+  const isTreeGauge = !!centerGlyph;
+  const uid = `d-${slot}-${Math.random().toString(36).slice(2,6)}`;
+  const faceGlow = resolvedGaugeGlowColor();
+  const dBgGradId = `${uid}-bg`, dDefs = el('defs',{});
+  const dBgGrad = el('radialGradient',{id:dBgGradId,cx:'50%',cy:'50%',r:'72%'});
+  dBgGrad.appendChild(el('stop',{offset:'0%',  'stop-color':lighten(faceGlow,0.3), 'stop-opacity':gaugeGlowOpacity(0.52)}));
+  dBgGrad.appendChild(el('stop',{offset:'22%', 'stop-color':lighten(faceGlow,0.24),'stop-opacity':gaugeGlowOpacity(0.38)}));
+  dBgGrad.appendChild(el('stop',{offset:'48%', 'stop-color':lighten(faceGlow,0.18),'stop-opacity':gaugeGlowOpacity(0.18)}));
+  dBgGrad.appendChild(el('stop',{offset:'72%', 'stop-color':faceGlow,'stop-opacity':gaugeGlowOpacity(0.06)}));
+  dBgGrad.appendChild(el('stop',{offset:'100%','stop-color':faceGlow,'stop-opacity':0.0}));
+  dDefs.appendChild(dBgGrad);
+  parent.appendChild(dDefs);
+
+  parent.appendChild(el('path',{d:path, fill:state.hudMode?'transparent':(isTreeGauge?'transparent':'#03050a'), stroke:rgba(state.theme,state.hudMode?0.18:0.24),'stroke-width':1.25}));
+  if (!state.hudMode && !isTreeGauge) parent.appendChild(el('path',{d:path,fill:`url(#${dBgGradId})`,stroke:'none'}));
+
+  if (sweep) {
+    const safeFraction = Math.min(Math.max(Number(fraction)||0,0),1);
+    const litLen = digitalTrackLen * safeFraction;
+    const litColor = (redFraction!=null && safeFraction>redFraction) ? '#ef4444' : state.theme;
+    parent.appendChild(el('path',{d:digitalTrackPath,fill:'none',stroke:rgba(state.theme,state.hudMode?0.12:0.18),'stroke-width':digitalTrackW,'stroke-linecap':'butt','stroke-linejoin':'round'}));
+    if (litLen > 0.001) {
+      parent.appendChild(el('path',{d:digitalTrackPath,fill:'none',stroke:litColor,'stroke-width':digitalTrackW,'stroke-linecap':'butt','stroke-linejoin':'round','stroke-dasharray':`${litLen} ${Math.max(0,digitalTrackLen-litLen)}`,opacity:0.92,filter:state.hudMode?'':'url(#text-glow)'}));
+    }
+    if (peakFraction!=null && peakFraction>safeFraction) {
+      const peakStart = digitalTrackLen*Math.min(Math.max(peakFraction,0),1);
+      const tickLen = Math.min(8,digitalTrackLen*0.035);
+      parent.appendChild(el('path',{d:digitalTrackPath,fill:'none',stroke:'#fff','stroke-width':digitalTrackW,'stroke-linecap':'butt','stroke-dasharray':`${tickLen} ${Math.max(0,digitalTrackLen-tickLen)}`,'stroke-dashoffset':-peakStart,filter:state.hudMode?'':'url(#text-glow)'}));
+    }
+  }
+
+  const scaleSize = Number(state[`gauge${slot}ScaleSize`]||22);
+  const scaleInset = Math.max(Number(state.gaugeScaleInset)||58, 30+scaleSize*0.72+10);
+  const dtOuter = 2, dtMajor = digitalTrackW+2, dtMinor = Math.max(dtOuter+6, digitalTrackW*0.68);
+  for (const spec of linearGaugeTickSpecs(48,4)) {
+    const { tt, isMajor } = spec;
+    const isRed = redFraction!=null && tt>redFraction;
+    const tick = gaugeTickAttrs(cx,cy,r,tt,isMajor?dtMajor:dtMinor,dtOuter);
+    parent.appendChild(el('line',{...tick, stroke:isRed?rgba('#ef4444',0.72):rgba(lighten(state.theme,0.45),isMajor?0.88:0.5),'stroke-width':isMajor?1.8:1.15,'stroke-linecap':'round',filter:isMajor&&!state.hudMode?'url(#text-glow)':''}));
+  }
+  parent.appendChild(el('path',{d:gaugeSweepPath(cx,cy,Math.max(1,r-digitalTrackW-8),state.shape==='square'?96:128),fill:'none',stroke:rgba(state.theme,0.16),'stroke-width':1}));
+
+  if (centerGlyph) {
+    parent.appendChild(centerGlyph);
+  } else {
+    const digitalLabelText = String(label||'');
+    const digitalUnitText = String(unit||'');
+    const digitalShowUnit = !!digitalUnitText && !digitalLabelText.toUpperCase().includes(digitalUnitText.toUpperCase());
+    const digitalLabelY = cy + state[`gauge${slot}LabelDy`];
+    if (label) parent.appendChild(txt('text',{x:cx+state[`gauge${slot}LabelDx`],y:digitalLabelY,'text-anchor':'middle','font-family':'IBM Plex Sans Condensed','font-size':state[`gauge${slot}LabelSize`],fill:state.text,opacity:0.7,'letter-spacing':3,'data-text-slot':slot,'data-text-kind':'label'},label));
+    if (value!=null) parent.appendChild(txt('text',{x:cx+state[`gauge${slot}ValueDx`],y:cy+state[`gauge${slot}ValueDy`],'text-anchor':'middle','font-family':'IBM Plex Mono','font-weight':500,'font-size':state[`gauge${slot}ValueSize`],fill:state.text,filter:'url(#text-glow)','data-text-slot':slot,'data-text-kind':'value'},String(value)));
+    if (digitalShowUnit) parent.appendChild(txt('text',{x:cx+state[`gauge${slot}UnitDx`],y:cy+resolvedGaugeUnitDy(slot),'text-anchor':'middle','font-family':'IBM Plex Sans Condensed','font-size':state[`gauge${slot}UnitSize`],fill:state.text,opacity:0.55,'letter-spacing':2,'data-text-slot':slot,'data-text-kind':'unit'},unit));
+  }
+}
+
+//  ============================================================
+//  DRAW GAUGE (needle/analog)
+//  ============================================================
+function drawNeedleGauge(parent, slot, opts) {
+  const { x, y, size, label, value, unit, fraction, redFraction=null, peakFraction=null, min, max, sensorKey } = opts;
+  const r = size/2, cx = x, cy = y, f = Math.max(0,Math.min(1,fraction));
+  const uid = `${slot}-${Math.random().toString(36).slice(2,6)}`;
+  const faceGlow = resolvedGaugeGlowColor();
+  const bgGradId = `n-bg-${uid}`, accentGradId = `n-acc-${uid}`;
+  const defs = el('defs',{});
+  const bgGrad = el('radialGradient',{id:bgGradId,cx:'50%',cy:'50%',r:'72%'});
+  bgGrad.appendChild(el('stop',{offset:'0%',  'stop-color':faceGlow,'stop-opacity':0}));
+  bgGrad.appendChild(el('stop',{offset:'15%', 'stop-color':faceGlow,'stop-opacity':0}));
+  bgGrad.appendChild(el('stop',{offset:'18%', 'stop-color':lighten(faceGlow,0.24),'stop-opacity':gaugeGlowOpacity(0.42)}));
+  bgGrad.appendChild(el('stop',{offset:'34%', 'stop-color':lighten(faceGlow,0.18),'stop-opacity':gaugeGlowOpacity(0.22)}));
+  bgGrad.appendChild(el('stop',{offset:'58%', 'stop-color':faceGlow,'stop-opacity':gaugeGlowOpacity(0.04)}));
+  bgGrad.appendChild(el('stop',{offset:'100%','stop-color':faceGlow,'stop-opacity':0.0}));
+  defs.appendChild(bgGrad);
+  const accGrad = el('radialGradient',{id:accentGradId,cx:'50%',cy:'50%',r:'72%'});
+  accGrad.appendChild(el('stop',{offset:'0%', 'stop-color':faceGlow,'stop-opacity':0}));
+  accGrad.appendChild(el('stop',{offset:'15%','stop-color':faceGlow,'stop-opacity':0}));
+  accGrad.appendChild(el('stop',{offset:'18%','stop-color':lighten(faceGlow,0.24),'stop-opacity':gaugeGlowOpacity(0.30)}));
+  accGrad.appendChild(el('stop',{offset:'38%','stop-color':lighten(faceGlow,0.16),'stop-opacity':gaugeGlowOpacity(0.14)}));
+  accGrad.appendChild(el('stop',{offset:'70%','stop-color':faceGlow,'stop-opacity':gaugeGlowOpacity(0.03)}));
+  accGrad.appendChild(el('stop',{offset:'100%','stop-color':faceGlow,'stop-opacity':0.0}));
+  defs.appendChild(accGrad);
+  parent.appendChild(defs);
+
+  parent.appendChild(el('path',{d:shapePath(state.shape,cx,cy,r),fill:state.hudMode?'transparent':'#03050a',stroke:rgba(state.theme,state.hudMode?0.26:0.34),'stroke-width':1.25}));
+  if (!state.hudMode) {
+    parent.appendChild(el('path',{d:shapePath(state.shape,cx,cy,r),fill:`url(#${bgGradId})`,stroke:'none'}));
+    parent.appendChild(el('path',{d:shapePath(state.shape,cx,cy,r-2),fill:`url(#${accentGradId})`,stroke:'none'}));
+  }
+  parent.appendChild(el('path',{d:shapePath(state.shape,cx,cy,r-10),fill:'none',stroke:rgba(state.theme,0.14),'stroke-width':1}));
+
+  const isRpmScale = sensorKey === 'rpm';
+  const scaleSize = Number(state[`gauge${slot}ScaleSize`]||22);
+  const scaleInset = Math.max(Number(state.gaugeScaleInset)||58, 30+scaleSize*0.72+10);
+
+  if (isRpmScale) {
+    for (const spec of rpmGaugeTickSpecs(state.maxRpm,250)) {
+      const { tt, isMajor, isMid } = spec;
+      const isRed = redFraction!=null && tt>redFraction;
+      const tick = gaugeTickAttrs(cx,cy,r,tt,isMajor?30:(isMid?25:20),10);
+      parent.appendChild(el('line',{...tick, stroke:isRed?'#ef4444':rgba(state.theme,isMajor?1:(isMid?0.72:0.5)),'stroke-width':isMajor?2.5:(isMid?1.7:1.25),'stroke-linecap':'round',filter:isMajor?'url(#text-glow)':''}));
+    }
+  } else {
+    const majorEvery = sensorKey === 'speed' && currentUnits.speed === 'kmh' ? 6 : 4;
+    for (const spec of linearGaugeTickSpecs(48,majorEvery)) {
+      const { tt, isMajor } = spec;
+      const isRed = redFraction!=null && tt>redFraction;
+      const tick = gaugeTickAttrs(cx,cy,r,tt,isMajor?30:22,10);
+      parent.appendChild(el('line',{...tick, stroke:isRed?'#ef4444':rgba(state.theme,isMajor?1:0.5),'stroke-width':isMajor?2.5:1.25,'stroke-linecap':'round',filter:isMajor?'url(#text-glow)':''}));
+      if (isMajor && min!=null && max!=null) {
+        let labelVal = min + tt*(max-min);
+        if (scaleConverts(sensorKey)) labelVal = displayValue(sensorKey, labelVal);
+        const lp = gaugeSweepPoint(cx,cy,r,tt,scaleInset);
+        parent.appendChild(txt('text',{x:lp.x,y:lp.y,'text-anchor':'middle','dominant-baseline':'middle','font-family':'IBM Plex Mono','font-size':scaleSize,'font-weight':600,fill:state.text,opacity:0.85,'data-text-slot':slot,'data-text-kind':'scale'},formatScaleLabel(sensorKey, labelVal)));
+      }
+    }
+  }
+
+  if (isRpmScale) {
+    const ticks = NORMALIZED_LABELS.filter(v=>v<=state.maxRpm).map(v=>({rpm:v,label:String(v/1000),red:v>=state.redline}));
+    const rl = state.redline, rll = (rl/1000).toFixed(rl%1000===0?0:1);
+    let merged = false;
+    for (const t of ticks) { if (Math.abs(t.rpm-rl)<LABEL_MERGE_RPM){t.rpm=rl;t.label=rll;t.red=true;merged=true;break;} }
+    if (!merged) ticks.push({rpm:rl,label:rll,red:true});
+    for (const t of ticks) {
+      if (t.rpm > state.maxRpm) continue;
+      const lp = gaugeSweepPoint(cx,cy,r,t.rpm/state.maxRpm,scaleInset);
+      parent.appendChild(txt('text',{x:lp.x,y:lp.y,'text-anchor':'middle','dominant-baseline':'middle','font-family':'IBM Plex Mono','font-size':scaleSize,'font-weight':600,fill:t.red?'#ef4444':state.text,opacity:t.red?0.95:0.7,'data-text-slot':slot,'data-text-kind':'scale'},t.label));
+    }
+  }
+
+  parent.appendChild(el('circle',{cx,cy,r:r*0.11,fill:state.hudMode?'transparent':'#000',stroke:state.hudMode?'none':rgba(lighten(state.theme,0.18),0.16),'stroke-width':state.hudMode?0:1.1}));
+  if (peakFraction!=null && peakFraction>f) {
+    const peakTick = gaugeTickAttrs(cx,cy,r,Math.min(1,peakFraction),18,6);
+    parent.appendChild(el('line',{...peakTick,stroke:'#fff','stroke-width':2.5,'stroke-linecap':'round',filter:'url(#text-glow)'}));
+  }
+  const na = gaugeSweepAngle(f);
+  const needleTip = gaugeSweepPoint(cx,cy,r,f,14);
+  const tailLen = 4;
+  const litColor = (redFraction!=null && f>redFraction) ? '#ef4444' : state.theme;
+  parent.appendChild(el('line',{x1:cx-tailLen*Math.cos(na),y1:cy-tailLen*Math.sin(na),x2:needleTip.x,y2:needleTip.y,stroke:litColor,'stroke-width':3.5,'stroke-linecap':'round',filter:'url(#text-glow)'}));
+  parent.appendChild(el('circle',{cx,cy,r:7.5,fill:'#020306',stroke:state.theme,'stroke-width':1.5}));
+  parent.appendChild(el('circle',{cx,cy,r:2.5,fill:lighten(state.theme,0.4),opacity:0.95}));
+
+  const analogLabelSize = Number(state[`gauge${slot}LabelSize`]||18);
+  const analogUnitSize  = Number(state[`gauge${slot}UnitSize`] ||14);
+  const analogLabelY = cy + r*0.64, analogUnitY = cy + r*0.82;
+  const analogLabelText = String(label||''), analogUnitText = String(unit||'');
+  const analogShowUnit = !!analogUnitText && !analogLabelText.toUpperCase().includes(analogUnitText.toUpperCase());
+  if (label) parent.appendChild(txt('text',{x:cx+state[`gauge${slot}LabelDx`],y:analogLabelY,'text-anchor':'middle','font-family':'IBM Plex Sans Condensed','font-size':analogLabelSize,fill:state.text,opacity:0.9,'letter-spacing':3,'data-text-slot':slot,'data-text-kind':'label'},label));
+  if (analogShowUnit) parent.appendChild(txt('text',{x:cx+state[`gauge${slot}UnitDx`],y:analogUnitY,'text-anchor':'middle','font-family':'IBM Plex Sans Condensed','font-size':analogUnitSize,fill:state.text,opacity:0.58,'letter-spacing':2,'data-text-slot':slot,'data-text-kind':'unit'},unit));
+}
+
+//  ============================================================
+//  ECO TREE
+//  ============================================================
+let waveTime = 0, waveEnergy = 0;
+
+function ecoTreeGlyph(cx, cy, avgMpg, slot) {
+  const g = el('g',{});
+  const pBush   = Math.max(0,Math.min(1,(avgMpg-5)/5));
+  const pFruit1 = Math.max(0,Math.min(1,(avgMpg-10)/5));
+  const pFruit2 = Math.max(0,Math.min(1,(avgMpg-15)/5));
+  const t = Math.max(0.1,Math.min(1,avgMpg/20));
+  const mood = avgMpg<10?'sad':(avgMpg<20?'neutral':'happy');
+  const wilt = Math.max(0,1-(avgMpg/15));
+  const staticTilt = -8*wilt;
+  const trunkBase = cy+30, trunkH = state.ecoTrunkH+24*t, trunkTopY = trunkBase-trunkH;
+  const trunkW = state.ecoTrunkW+4.5*t;
+  const sway = Math.sin(waveTime*1.2)*(1.0+0.6*t);
+  g.appendChild(el('path',{d:`M ${cx-16},${trunkBase+1} q 4,-4 8,0 q 4,-4 8,0 q 4,-4 8,0 q 4,-4 8,0`,fill:'none',stroke:'#22c55e','stroke-width':1.2,opacity:0.75,'stroke-linecap':'round'}));
+  g.appendChild(el('rect',{x:cx-trunkW/2+(sway*state.ecoSwayIntensity*0.2)+staticTilt,y:trunkTopY,width:trunkW,height:trunkH,rx:trunkW*0.45,ry:trunkW*0.45,fill:'#a47148',stroke:'#6b4423','stroke-width':0.6}));
+  g.appendChild(el('path',{d:`M ${cx+trunkW*0.05+sway*0.2},${trunkTopY+trunkH*0.55} q ${trunkW*0.25},${trunkH*0.1} 0,${trunkH*0.2}`,fill:'none',stroke:'#6b4423','stroke-width':0.5,opacity:0.7}));
+  const canopyR = (state.ecoCanopyR+22*t)*pBush;
+  function blob(dx,dy,scale,phase){const wob=Math.sin(waveTime*1.6+phase)*1.2*state.ecoSwayIntensity;return{x:cx+dx+(sway*state.ecoSwayIntensity*0.7)+staticTilt,y:trunkTopY+dy+wob,r:canopyR*scale};}
+  const blobs=[blob(-canopyR*0.58,3,0.76*pBush,0.0),blob(canopyR*0.52,5,0.80*pBush,1.7),blob(-canopyR*0.32,-canopyR*0.48,0.90*pBush,0.8),blob(canopyR*0.40,-canopyR*0.62,0.85*pBush,2.3),blob(canopyR*0.05,-canopyR*0.92,0.94*pBush,1.1)];
+  if (avgMpg>5) {
+    for (const b of blobs) g.appendChild(el('circle',{cx:b.x,cy:b.y+1.2,r:b.r,fill:'#166534',opacity:0.9}));
+    for (const b of blobs) g.appendChild(el('circle',{cx:b.x,cy:b.y,r:Math.max(0.5,b.r-2),fill:'#34d399'}));
+    const top=blobs[4];
+    if (top.r>2) g.appendChild(el('ellipse',{cx:top.x-top.r*0.25,cy:top.y-top.r*0.45,rx:top.r*0.35,ry:top.r*0.18,fill:'#bbf7d0',opacity:0.55}));
+  }
+  const faceInCanopy = avgMpg>5 && canopyR>0;
+  const faceX = cx+(sway*state.ecoSwayIntensity*0.26)+staticTilt;
+  const faceY = faceInCanopy?(trunkTopY-canopyR*0.92):(trunkBase-trunkH*0.48);
+  const faceScale = faceInCanopy?1.55:1.18;
+  const eyeR = (1.5+0.4*t)*faceScale, eyeSpacing = trunkW*0.55*faceScale;
+  const blinkPhase = (waveTime+0.6)%3.4, blinking = blinkPhase>3.28;
+  if (blinking) {
+    for (const sx of [-1,1]) g.appendChild(el('line',{x1:faceX+sx*eyeSpacing-eyeR-0.2*faceScale,y1:faceY,x2:faceX+sx*eyeSpacing+eyeR+0.2*faceScale,y2:faceY,stroke:'#2a1607','stroke-width':1.1*faceScale,'stroke-linecap':'round'}));
+  } else {
+    for (const sx of [-1,1]) {
+      g.appendChild(el('circle',{cx:faceX+sx*eyeSpacing,cy:faceY,r:eyeR,fill:'#1a0d04'}));
+      if (mood==='happy') g.appendChild(el('circle',{cx:faceX+sx*eyeSpacing-0.35*faceScale,cy:faceY-0.45*faceScale,r:0.55*faceScale,fill:'#fff'}));
+    }
+  }
+  const mouthY=faceY+3.6*faceScale, mw=Math.max(2.2*faceScale,trunkW*0.5*faceScale);
+  let mouthD;
+  if (mood==='happy') mouthD=`M ${faceX-mw},${mouthY} Q ${faceX},${mouthY+2.6*faceScale} ${faceX+mw},${mouthY}`;
+  else if (mood==='sad') mouthD=`M ${faceX-mw},${mouthY+1.4*faceScale} Q ${faceX},${mouthY-1.0*faceScale} ${faceX+mw},${mouthY+1.4*faceScale}`;
+  else mouthD=`M ${faceX-mw*0.7},${mouthY+0.4*faceScale} L ${faceX+mw*0.7},${mouthY+0.4*faceScale}`;
+  g.appendChild(el('path',{d:mouthD,fill:'none',stroke:'#2a1607','stroke-width':1.1,'stroke-linecap':'round'}));
+  if (mood==='happy') for (const sx of [-1,1]) g.appendChild(el('ellipse',{cx:faceX+sx*(eyeSpacing+1.6*faceScale),cy:mouthY-0.6*faceScale,rx:1.0*faceScale,ry:0.6*faceScale,fill:'#fda4af',opacity:0.65}));
+  if (avgMpg>10) {
+    const fruitDefs=[];const numFruits=12;const minBuffer=9.0;
+    const rnd=(s)=>(Math.abs(Math.sin(s*12.9898+78.233)*43758.5453)%1);
+    const baseBlobs=[{dx:-canopyR*0.58,dy:3,r:canopyR*0.76},{dx:canopyR*0.52,dy:5,r:canopyR*0.80},{dx:-canopyR*0.32,dy:-canopyR*0.48,r:canopyR*0.90},{dx:canopyR*0.40,dy:-canopyR*0.62,r:canopyR*0.85},{dx:canopyR*0.05,dy:-canopyR*0.92,r:canopyR*0.94}];
+    for (let i=0;i<numFruits;i++) {
+      for (let att=0;att<20;att++) {
+        const s=i*17.3+att*2.1,bIdx=Math.floor(rnd(s)*5),b=baseBlobs[bIdx],rad=b.r*0.85;
+        const ang=rnd(s+0.5)*Math.PI*2,dist=rnd(s+0.8)*rad;
+        const fdx=Math.cos(ang)*dist,fdy=Math.sin(ang)*dist,lx=b.dx+fdx,ly=b.dy+fdy;
+        let clash=false;
+        for (const ex of fruitDefs){if(Math.hypot(lx-ex.lx,ly-ex.ly)<minBuffer){clash=true;break;}}
+        const faceLocalX=faceX-cx-(sway*state.ecoSwayIntensity*0.7)-staticTilt,faceLocalY=faceY-trunkTopY;
+        const faceBuffer=faceInCanopy?(10+faceScale*6):8;
+        if (Math.hypot(lx-faceLocalX,ly-faceLocalY)<faceBuffer) clash=true;
+        if (!clash){fruitDefs.push({blobIdx:bIdx,dx:fdx,dy:fdy,lx,ly,growth:(i%2===0?pFruit1:pFruit2)});break;}
+      }
+    }
+    for (let i=0;i<fruitDefs.length;i++) {
+      const fd=fruitDefs[i];if(fd.growth<=0)continue;
+      const b=blobs[fd.blobIdx],dangle=Math.sin(waveTime*2.0+i*1.6)*0.6;
+      const fx=b.x+fd.dx+dangle*0.3,fy=b.y+fd.dy+dangle*0.4,fr=3.8*fd.growth;
+      g.appendChild(el('line',{x1:fx,y1:fy-fr,x2:fx+0.4,y2:fy-fr-1.8,stroke:'#7c5b3f','stroke-width':0.65,'stroke-linecap':'round',opacity:fd.growth}));
+      g.appendChild(el('ellipse',{cx:fx+1.4,cy:fy-fr-1.0,rx:1.1*fd.growth,ry:0.55*fd.growth,fill:'#22c55e',transform:`rotate(${20+(i*7)%25} ${fx+1.4} ${fy-fr-1.0})`,opacity:fd.growth}));
+      g.appendChild(el('circle',{cx:fx,cy:fy,r:fr,fill:'#dc2626'}));
+      g.appendChild(el('circle',{cx:fx-fr*0.32,cy:fy-fr*0.32,r:Math.max(0.3,fr*0.32),fill:'#fecaca',opacity:0.75}));
+    }
+  }
+  if (avgMpg>25) {
+    const pLeaves=Math.max(0,Math.min(1,(avgMpg-25)/5)),sparkleCount=Math.round(5+pLeaves*20);
+    for (let i=0;i<sparkleCount;i++){const phase=i*1.7+waveTime*0.45;const px=cx+Math.sin(phase)*(32+i*3),py=trunkTopY-canopyR-8+Math.cos(phase*1.4+i)*12;const alpha=0.4+0.4*Math.sin(waveTime*2+i*1.3);g.appendChild(el('circle',{cx:px,cy:py,r:1.2+Math.random()*0.8,fill:'#86efac',opacity:alpha}));}
+  }
+  if (avgMpg>30) {
+    const pClones=Math.max(0,Math.min(1,(avgMpg-30)/10));
+    for (const sx of [-1,1]) {
+      const clX=cx+sx*68,clY=cy+28,ct=0.85*pClones,cSway=Math.sin(waveTime*1.1+sx)*(0.8+0.4*ct),cTrunkH=24*ct,cCanopyR=17*ct;
+      g.appendChild(el('rect',{x:clX-(6*ct)/2,y:clY-cTrunkH,width:6*ct,height:cTrunkH,rx:1.5,fill:'#a47148',opacity:pClones}));
+      g.appendChild(el('circle',{cx:clX+cSway,cy:clY-cTrunkH-cCanopyR*0.5,r:cCanopyR,fill:'#166534',opacity:0.8*pClones}));
+      g.appendChild(el('circle',{cx:clX+cSway,cy:clY-cTrunkH-cCanopyR*0.5,r:Math.max(0.2,cCanopyR-1),fill:'#34d399',opacity:pClones}));
+    }
+  }
+  if (avgMpg<8){const tearX=faceX+eyeSpacing+1.6,tearY=faceY+3.2;g.appendChild(el('circle',{cx:tearX,cy:tearY,r:0.9,fill:'#60a5fa',opacity:0.85}));}
+  const readoutY = trunkBase+22;
+  g.appendChild(txt('text',{x:cx+state[`gauge${slot}LabelDx`],y:readoutY+state[`gauge${slot}LabelDy`],'text-anchor':'middle','font-family':'IBM Plex Sans Condensed','font-size':state[`gauge${slot}LabelSize`],fill:state.text,opacity:0.7,'letter-spacing':3,'data-text-slot':slot,'data-text-kind':'label'},displayUnit('mpg-avg')));
+  g.appendChild(txt('text',{x:cx+state[`gauge${slot}ValueDx`],y:readoutY+24+state[`gauge${slot}ValueDy`],'text-anchor':'middle','font-family':'IBM Plex Mono','font-size':state[`gauge${slot}ValueSize`],fill:state.text,filter:'url(#text-glow)','data-text-slot':slot,'data-text-kind':'value'},displayValue('mpg-avg',avgMpg).toFixed(1)));
+  return g;
+}
+
+//  ============================================================
+//  FUEL LIQUID
+//  ============================================================
+let rawTiltX = 0, displayedTilt = 0, tiltVelocity = 0;
+let lastPhysicsMs = performance.now();
+const fuelBubbles = [], foamSpecks = [];
+
+function setFuelTiltDegrees(degrees) {
+  const tilt = Number(degrees);
+  if (!Number.isFinite(tilt)) return;
+  rawTiltX = Math.max(-30, Math.min(30, tilt));
+}
+
+window.DashUI = window.DashUI || {};
+window.DashUI.setFuelTilt = setFuelTiltDegrees;
+
+document.addEventListener('mousemove', (e) => {
+  setFuelTiltDegrees((e.clientX / window.innerWidth - 0.5) * 28);
+});
+
+function stepTiltPhysics() {
+  const now = performance.now();
+  const dt = Math.min(0.05, (now - lastPhysicsMs) / 1000);
+  lastPhysicsMs = now;
+  const accel = state.fuelStiffness*(rawTiltX-displayedTilt) - state.fuelDamping*tiltVelocity;
+  tiltVelocity += accel*dt;
+  displayedTilt += tiltVelocity*dt;
+  waveTime += dt;
+  waveEnergy = Math.min(1, waveEnergy*Math.pow(0.55,dt) + Math.abs(tiltVelocity)*dt*0.05);
+  stepFuelBubbles(dt);
+}
+function stepFuelBubbles(dt) {
+  const bubbleRate = 0.7+waveEnergy*4.5;
+  if (Math.random()<bubbleRate*dt && fuelBubbles.length<24) fuelBubbles.push({xn:(Math.random()-0.5)*1.7,yn:0.78+Math.random()*0.18,r:0.9+Math.random()*2.2,vy:0.06+Math.random()*0.16,wobble:Math.random()*Math.PI*2,wobbleSpeed:1+Math.random()*2,life:0});
+  for (let i=fuelBubbles.length-1;i>=0;i--){const b=fuelBubbles[i];b.yn-=b.vy*dt;b.life+=dt;b.xn+=Math.sin(waveTime*b.wobbleSpeed+b.wobble)*dt*0.05;if(b.yn<-0.95)fuelBubbles.splice(i,1);}
+  const speckRate=waveEnergy*18;
+  if (Math.random()<speckRate*dt && foamSpecks.length<30) foamSpecks.push({xn:(Math.random()-0.5)*1.6,r:0.5+Math.random()*1.4,life:0,ttl:0.35+Math.random()*0.7});
+  for (let i=foamSpecks.length-1;i>=0;i--){foamSpecks[i].life+=dt;if(foamSpecks[i].life>foamSpecks[i].ttl)foamSpecks.splice(i,1);}
+}
+
+function fuelLiquidGlyph(cx, cy, pct, size, slot) {
+  const r = size/2-10;
+  const fillRatio = Math.max(0.02,Math.min(1,pct/100));
+  const restSurfaceY = cy+r-(2*r*fillRatio);
+  const tilt = Math.max(-30,Math.min(30,displayedTilt));
+  const slope = Math.tan(tilt*Math.PI/180);
+  const N=28, halfX=r*1.15;
+  const ampBase=1.2, ampDriven=9*waveEnergy*state.fuelWaveAmp, amp=ampBase+ampDriven;
+  const driftPhase=-tiltVelocity*0.18;
+  const pts=new Array(N+1);
+  for (let i=0;i<=N;i++){const t=i/N;const x=cx-halfX+t*2*halfX;const dx=x-cx;const yBase=restSurfaceY+slope*dx;const w1=Math.sin(waveTime*3.4+dx*0.055+driftPhase)*amp;const w2=Math.sin(waveTime*5.7+dx*0.11+1.2)*amp*0.42;pts[i]=[x,yBase+w1+w2];}
+  let surfaceD=`M ${pts[0][0]},${pts[0][1]}`;
+  for (let i=1;i<=N;i++) surfaceD+=` L ${pts[i][0]},${pts[i][1]}`;
+  const g=el('g',{});
+  const uid=Math.random().toString(36).slice(2,8);
+  const clipId=`fuel-clip-${uid}`,gradId=`fuel-grad-${uid}`;
+  const defs=el('defs',{});
+  const clip=el('clipPath',{id:clipId});clip.appendChild(el('path',{d:shapePath(state.shape,cx,cy,r)}));defs.appendChild(clip);
+  const grad=el('linearGradient',{id:gradId,x1:0,y1:0,x2:0,y2:1});
+  grad.appendChild(el('stop',{offset:'0%','stop-color':lighten(state.theme,0.35),'stop-opacity':Math.min(1,state.fuelOpacity+0.15)}));
+  grad.appendChild(el('stop',{offset:'60%','stop-color':state.theme,'stop-opacity':state.fuelOpacity}));
+  grad.appendChild(el('stop',{offset:'100%','stop-color':state.theme,'stop-opacity':Math.min(1,state.fuelOpacity*1.25)}));
+  defs.appendChild(grad);g.appendChild(defs);
+  g.appendChild(el('path',{d:shapePath(state.shape,cx,cy,r),fill:state.hudMode?'transparent':'rgba(2,4,8,0.55)','clip-path':`url(#${clipId})`}));
+  const xL=pts[0][0],xR=pts[N][0],bottomY=cy+r+40;
+  g.appendChild(el('path',{d:surfaceD+` L ${xR},${bottomY} L ${xL},${bottomY} Z`,fill:`url(#${gradId})`,'clip-path':`url(#${clipId})`}));
+  const surfaceN=(restSurfaceY-cy)/r;
+  for (const b of fuelBubbles){if(b.yn<surfaceN+0.04)continue;const bx=cx+b.xn*r,by=cy+b.yn*r;g.appendChild(el('circle',{cx:bx,cy:by,r:b.r,fill:'none',stroke:lighten(state.theme,0.75),'stroke-width':0.75,opacity:0.45,'clip-path':`url(#${clipId})`}));g.appendChild(el('circle',{cx:bx-b.r*0.32,cy:by-b.r*0.32,r:Math.max(0.4,b.r*0.28),fill:'#fff',opacity:0.55,'clip-path':`url(#${clipId})`}));}
+  const FOAM_BASE=1.2,FOAM_MAX=16,foamThickness=FOAM_BASE+waveEnergy*(FOAM_MAX-FOAM_BASE),foamBump=Math.min(foamThickness*0.45,5);
+  let foamD='';
+  for (let i=0;i<=N;i++){const [px,py]=pts[i];const dx=px-cx;const bump=Math.sin(waveTime*4.6+dx*0.18)*foamBump+Math.sin(waveTime*7.2+dx*0.31+0.7)*foamBump*0.45;const ty=py-foamThickness+bump;foamD+=(i===0?`M ${px},${ty}`:`L ${px},${ty}`);}
+  for (let i=N;i>=0;i--) foamD+=` L ${pts[i][0]},${pts[i][1]}`;
+  foamD+=' Z';
+  g.appendChild(el('path',{d:foamD,fill:lighten(state.theme,0.78),opacity:0.55+waveEnergy*0.35,'clip-path':`url(#${clipId})`}));
+  for (const s of foamSpecks){const sx=cx+s.xn*r*0.95;const tt2=Math.max(0,Math.min(1,(sx-pts[0][0])/(pts[N][0]-pts[0][0])));const idx=Math.min(N,Math.max(0,tt2*N));const lo=pts[Math.floor(idx)],hi=pts[Math.ceil(idx)];const lerp=idx-Math.floor(idx);const wy=lo[1]*(1-lerp)+hi[1]*lerp;const fade=1-s.life/s.ttl;g.appendChild(el('circle',{cx:sx,cy:wy-foamThickness*(0.25+0.55*(s.life/s.ttl)),r:s.r,fill:'#fff',opacity:0.6*fade,'clip-path':`url(#${clipId})`}));}
+  g.appendChild(el('path',{d:surfaceD,fill:'none',stroke:lighten(state.theme,0.65),'stroke-width':1.25,opacity:0.8,'stroke-linejoin':'round','clip-path':`url(#${clipId})`}));
+  g.appendChild(txt('text',{x:cx+state[`gauge${slot}ValueDx`],y:cy+5+state[`gauge${slot}ValueDy`],'text-anchor':'middle','font-family':'IBM Plex Mono','font-size':state[`gauge${slot}ValueSize`],fill:state.text,filter:'url(#text-glow)','data-text-slot':slot,'data-text-kind':'value'},`${pct}%`));
+  g.appendChild(txt('text',{x:cx+state[`gauge${slot}LabelDx`],y:cy+28+state[`gauge${slot}LabelDy`],'text-anchor':'middle','font-family':'IBM Plex Sans Condensed','font-size':state[`gauge${slot}LabelSize`],fill:state.text,opacity:0.85,'letter-spacing':3,'data-text-slot':slot,'data-text-kind':'label'},'FUEL'));
+  return g;
+}
+
+//  ============================================================
+//  LAYOUTS
+//  ============================================================
+function renderGauges() {
+  const s1=document.getElementById('slot-1'); s1.innerHTML='';
+  const s2=document.getElementById('slot-2'); s2.innerHTML='';
+  const s3=document.getElementById('slot-3'); s3.innerHTML='';
+  const s4=document.getElementById('slot-4'); s4.innerHTML='';
+  const smallSize=state.gaugeSmallSize, largeSize=state.gaugeLargeSize;
+  const containers=[s1,s2,s3,s4];
+  const layoutDefaults=LAYOUT_DEFAULTS[state.layout]||LAYOUT_DEFAULTS.balanced;
+  for (let i=1;i<=4;i++) {
+    if (!state[`gauge${i}Enabled`]) continue;
+    const sensorKey=state[`gauge${i}Sensor`]||layoutDefaults[i-1];
+    const config=SENSOR_MAP[sensorKey];
+    if (!config) continue;
+    const slotSize=(i===1||i===4)?smallSize:largeSize;
+    const slotX=state[`gauge${i}X`], slotY=state[`gauge${i}Y`];
+    const defMin=typeof config.min==='function'?config.min():config.min;
+    const defMax=typeof config.max==='function'?config.max():config.max;
+    const scalable=config.raw && sensorKey!=='rpm' && sensorKey!=='boost';
+    const effMin=(scalable&&state[`gauge${i}ScaleMin`]!=null)?state[`gauge${i}ScaleMin`]:defMin;
+    const effMax=(scalable&&state[`gauge${i}ScaleMax`]!=null)?state[`gauge${i}ScaleMax`]:defMax;
+    let fraction, peakFraction;
+    if (config.raw) {
+      const rv=config.raw(), span=(effMax-effMin)||1;
+      if (rv == null) {
+        fraction=null;
+        peakFraction=null;
+      } else {
+        fraction=(rv-effMin)/span;
+        const peakMetric=config.peakKey?config.peakKey():sensorKey;
+        peakFraction=getPeakFraction(peakMetric,rv,effMin,span);
+      }
+    } else {
+      fraction=config.fraction();
+      peakFraction=config.peakFraction?config.peakFraction():null;
+    }
+    let gLabel=config.label, gUnit=config.unit;
+    const du=displayUnit(sensorKey);
+    if (du) gUnit=du;
+    if (sensorKey==='speed'){gLabel=du;gUnit='';}
+    const rawVal=config.val?config.val():null;
+    drawGauge(containers[i-1],{slot:i,sensorKey,x:slotX,y:slotY,size:slotSize,label:gLabel,value:rawVal!=null?formatGaugeValue(sensorKey,rawVal):null,min:effMin,max:effMax,unit:gUnit,fraction,redFraction:config.redFraction?config.redFraction():null,peakFraction,centerGlyph:config.centerGlyph?config.centerGlyph(slotX,slotY,slotSize,i):null});
+  }
+  // Apply gauge face glow
+  for (let i = 1; i <= 4; i++) {
+    const slotEl = document.getElementById('slot-' + i);
+    if (!slotEl) continue;
+    if (!state.hudMode && state.gaugeGlowEnabled) {
+      slotEl.style.filter = 'drop-shadow(0 0 6px ' + state.gaugeGlowColor + ')';
+    } else {
+      slotEl.style.filter = '';
+    }
+  }
+}
+
+//  ============================================================
+//  RENDER LOOP
+//  ============================================================
+function render() {
+  try {
+    state.needleCenterReadout = false;
+    state.editMode = false;
+    applyTheme();
+    document.body.setAttribute('data-hud-mode', state.hudMode ? 'on' : 'off');
+    stepTiltPhysics();
+    bumpPeak('rpm', state.rpm);
+    bumpPeak('speed',   toDisplaySpeed(state.speed));
+    bumpPeak('coolant', toDisplayTemp(state.coolant));
+    bumpPeak('oil',     toDisplayTemp(state.oilTemp));
+    const boostSpec = boostVacuumSpec();
+    bumpPeak(boostSpec.peakKey, boostSpec.value);
+    bumpPeak('mpg-avg', toDisplayMpg(state.avgMpg));
+    bumpPeak('mpg-inst', toDisplayMpg(state.instantMpg));
+    bumpPeak('fuel', state.fuelLevel);
+    bumpPeak('throttle', state.throttle);
+    renderTach();
+    renderGauges();
+  } catch (e) { console.error('Render error:', e); }
+}
+function loop() { render(); requestAnimationFrame(loop); }
+
+//  ============================================================
+//  CONFIG , load from server, apply to state
+//  ============================================================
+function applyConfig(saved) {
+  if (!saved) return;
+  suppressRouting = true;
+  if (saved.rotations) {
+    for (const r of ROTATIONS) {
+      const savedRot = saved.rotations[r];
+      if (savedRot) Object.assign(state.rotations[r], savedRot);
+      const rcfg = state.rotations[r];
+      if (savedRot && savedRot.tachWidthPct !== undefined) {
+        if (savedRot.tachArcWidthPct === undefined) rcfg.tachArcWidthPct = savedRot.tachWidthPct;
+        if (savedRot.tachBarWidthPct === undefined) rcfg.tachBarWidthPct = savedRot.tachWidthPct;
+      }
+    }
+    for (const k of Object.keys(defaults)) {
+      if (!PER_ROTATION_ALL_SET.has(k) && saved[k] !== undefined) state[k] = saved[k];
+    }
+    if (saved.activeRotation !== undefined) state.activeRotation = Number(saved.activeRotation);
+  } else {
+    // Legacy flat config
+    if (saved.archCx  !== undefined && saved.tachArcX === undefined) saved.tachArcX = saved.archCx;
+    if (saved.archCy  !== undefined && saved.tachArcY === undefined) saved.tachArcY = saved.archCy;
+    if (saved.barY    !== undefined && saved.tachBarY === undefined) saved.tachBarY = saved.barY;
+    if (saved.tachWidthPct !== undefined) {
+      if (saved.tachArcWidthPct === undefined) saved.tachArcWidthPct = saved.tachWidthPct;
+      if (saved.tachBarWidthPct === undefined) saved.tachBarWidthPct = saved.tachWidthPct;
+    }
+    for (const k of PER_ROTATION_ALL) { if (saved[k] !== undefined) state.rotations[0][k] = saved[k]; }
+    for (const k of Object.keys(defaults)) { if (!PER_ROTATION_ALL_SET.has(k) && saved[k] !== undefined) state[k] = saved[k]; }
+  }
+  const cfg = state.rotations[state.activeRotation];
+  for (const k in cfg) state[k] = cfg[k];
+  suppressRouting = false;
+}
+
+async function loadConfig() {
+  try {
+    const res = await fetch('http://127.0.0.1:__PORT__/config');
+    if (res.ok) {
+      let saved = await res.json();
+      if (saved && saved.config) saved = saved.config;
+      applyConfig(saved);
+    }
+  } catch (_) {}
+}
+
+//  ============================================================
+//  WEBSOCKET , live OBD data from Kotlin
+//  ============================================================
+const WS_URL = null;
+const INITIAL_FRAME = null;
+let ws = null;
+
+function connectWs() {
+  ws = new WebSocket(WS_URL);
+  ws.onmessage = (e) => {
+    try {
+      const frame = JSON.parse(e.data);
+      if (frame.type === 'configUpdated') { loadConfig().then(() => activateRotation(state.activeRotation)); return; }
+      applyDataFrame(frame);
+    } catch (_) {}
+  };
+  ws.onclose = () => setTimeout(connectWs, 1000);
+  ws.onerror = () => { try { ws.close(); } catch (_) {} };
+}
+
+function applyDataFrame(frame) {
+  if (frame.units) {
+    currentUnits = {
+      speed:       frame.units.speed       || currentUnits.speed,
+      temperature: frame.units.temperature || currentUnits.temperature,
+      pressure:    frame.units.pressure    || currentUnits.pressure,
+      fuelEconomy: frame.units.fuelEconomy || currentUnits.fuelEconomy,
+    };
+  }
+  if ('rpm' in frame) state.rpm = frame.rpm;
+  if ('speed' in frame) state.speed = frame.speed;
+  if ('coolant' in frame) state.coolant = frame.coolant;
+  if ('fuelLevel' in frame) state.fuelLevel = frame.fuelLevel;
+  if ('boost' in frame) state.boost = frame.boost;
+  if ('baro' in frame) state.baro = frame.baro;
+  if ('oilTemp' in frame) state.oilTemp = frame.oilTemp;
+  if ('throttle' in frame) state.throttle = frame.throttle;
+  if ('avgMpg' in frame) state.avgMpg = frame.avgMpg;
+  if ('instantMpg' in frame) state.instantMpg = frame.instantMpg;
+  if (frame.maxRpm     != null) state.maxRpm     = frame.maxRpm;
+  if (frame.redline   != null) state.redline   = frame.redline;
+  if (frame.theme     != null) state.theme     = frame.theme;
+  if (frame.text      != null) state.text      = frame.text;
+  if (frame.isConnected !== undefined) {
+    document.body.setAttribute('data-connected', frame.isConnected ? 'yes' : 'no');
+  }
+  if (frame.isSim !== undefined) {
+    document.body.setAttribute('data-sim', frame.isSim ? 'yes' : 'no');
+  }
+  if (frame.gaugeGlowEnabled !== undefined) state.gaugeGlowEnabled = frame.gaugeGlowEnabled;
+  if (frame.gaugeGlowColor) state.gaugeGlowColor = frame.gaugeGlowColor;
+  if (frame.landscapeHome !== undefined) state.landscapeHome = frame.landscapeHome;
+  if (frame.layout !== undefined) applyBakedLayout(frame.layout);
+  if (frame.fuelTiltDegrees != null) setFuelTiltDegrees(frame.fuelTiltDegrees);
+  const r = screenAngleToClusterRotation(screen.orientation?.angle || 0);
+  if (r !== state.activeRotation) activateRotation(r);
+}
+
+function closestRotation(deg) {
+  return [0, 90, 180, 270].reduce((a, b) => Math.abs(b-deg) < Math.abs(a-deg) ? b : a);
+}
+function screenAngleToClusterRotation(angle) {
+  const base = (360 - angle) % 360;
+  return closestRotation((base + (state.landscapeHome ? 90 : 0)) % 360);
+}
+
+let currentUnits = { speed: 'mph', temperature: 'f', pressure: 'psi', fuelEconomy: 'mpg' };
+
+function toDisplaySpeed(kph) {
+  if (kph == null) return null;
+  return currentUnits.speed === 'mph' ? kph * 0.621371 : kph;
+}
+function toDisplayTemp(c) {
+  if (c == null) return null;
+  return currentUnits.temperature === 'f' ? c * 9 / 5 + 32 : c;
+}
+function toDisplayBoost(mapKpa, baroKpa) {
+  return boostVacuumSpec(mapKpa, baroKpa).value;
+}
+function toDisplayMpg(mpg) {
+  if (mpg == null || mpg <= 0) return 0;
+  return currentUnits.fuelEconomy === 'mpg' ? mpg : 235.214 / mpg;
+}
+
+// Switch viewBox immediately when the window rotates, before the next WebSocket frame
+// arrives. screen.orientation.angle uses the same convention as OrientationEventListener
+// so (360 - angle) % 360 maps it to cluster rotationDeg.
+screen.orientation?.addEventListener('change', () => {
+  const r = screenAngleToClusterRotation(screen.orientation.angle);
+  if (r !== state.activeRotation) activateRotation(r);
+});
+
+//  ============================================================
+//  CHIP HANDLERS
+//  ============================================================
+document.getElementById('chip-exit').addEventListener('click', () => {
+  if (window.DashUIBridge) DashUIBridge.onExit();
+});
+document.getElementById('toggle-sim').addEventListener('click', () => {
+  if (window.DashUIBridge) DashUIBridge.enableSimMode();
+});
+document.getElementById('chip-set').addEventListener('click', () => {
+  if (window.DashUIBridge) DashUIBridge.openSettings();
+});
+
+//  ============================================================
+//  GAUGE LONG-PRESS (touch)
+//  ============================================================
+let longPressTimer = null;
+const LONG_PRESS_MS = 600;
+
+function gaugeSlotAtPoint(clientX, clientY) {
+  const svg = document.getElementById('cluster-svg');
+  if (!svg) return null;
+  const rect = svg.getBoundingClientRect();
+  const vb = VIEWBOX[state.activeRotation];
+  const sx = (clientX - rect.left) / rect.width  * vb.w;
+  const sy = (clientY - rect.top)  / rect.height * vb.h;
+  for (let slot = 1; slot <= 4; slot++) {
+    const gx = state[`gauge${slot}X`], gy = state[`gauge${slot}Y`];
+    const size = (slot===1||slot===4) ? state.gaugeSmallSize : state.gaugeLargeSize;
+    if (Math.abs(sx-gx) < size/2+18 && Math.abs(sy-gy) < size/2+18) return slot;
+  }
+  return null;
+}
+
+document.getElementById('cluster').addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  const slot = gaugeSlotAtPoint(touch.clientX, touch.clientY);
+  if (slot) {
+    longPressTimer = setTimeout(() => {
+      longPressTimer = null;
+      if (window.DashUIBridge) DashUIBridge.onGaugeLongPress(slot);
+    }, LONG_PRESS_MS);
+  }
+}, { passive: true });
+
+document.getElementById('cluster').addEventListener('touchend', () => {
+  if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+});
+document.getElementById('cluster').addEventListener('touchmove', () => {
+  if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+}, { passive: true });
+
+//  ============================================================
+//  SNAPSHOT / RESTORE (used by Kotlin undo system)
+//  ============================================================
+window.DashUI = window.DashUI || {};
+
+// Fields treated as persistent layout/config. Live sensor values (rpm, speed,
+// coolant, fuelLevel, boost, baro, oilTemp, avgMpg, instantMpg, isConnected,
+// isSim) are intentionally excluded , restoring them on undo would yank
+// telemetry backwards. Per-rotation positional/broadcast keys live inside
+// state.rotations and are captured wholesale via the 'rotations' key.
+window.DashUI.PERSISTENT_KEYS = [
+  'activeRotation',
+  'rotations',
+  'gauge1Enabled', 'gauge2Enabled', 'gauge3Enabled', 'gauge4Enabled',
+  'gauge1Sensor',  'gauge2Sensor',  'gauge3Sensor',  'gauge4Sensor',
+  'gauge1ScaleMin','gauge1ScaleMax','gauge2ScaleMin','gauge2ScaleMax',
+  'gauge3ScaleMin','gauge3ScaleMax','gauge4ScaleMin','gauge4ScaleMax',
+  'gaugeSmallSize','gaugeLargeSize',
+  'hudMode', 'editMode', 'layout', 'tach',
+  'theme', 'text',
+  'gaugeGlowEnabled', 'gaugeGlowColor',
+  'unitSystem', 'shape',
+  'needlesEnabled', 'needleCenterReadout',
+  'snapToGrid', 'gridSize', 'editorMode'
+];
+window.DashUI.PERSISTENT_SET = new Set(window.DashUI.PERSISTENT_KEYS);
+
+function getRealState() {
+  // Used by saveConfig payload , return the underlying object (proxy-transparent
+  // for JSON.stringify, but explicit here to avoid future proxy-trap surprises).
+  return realState;
+}
+
+window.DashUI.snapshotState = function() {
+  try {
+    var snap = {};
+    var src = realState;
+    window.DashUI.PERSISTENT_KEYS.forEach(function(key) {
+      if (Object.prototype.hasOwnProperty.call(src, key)) {
+        snap[key] = src[key];
+      }
+    });
+    return JSON.stringify(snap);
+  } catch (e) {
+    return '{}';
+  }
+};
+
+window.DashUI.restoreState = function(json) {
+  try {
+    var snap = (typeof json === 'string') ? JSON.parse(json) : json;
+    if (!snap || typeof snap !== 'object') return false;
+    suppressRouting = true;
+    try {
+      Object.keys(snap).forEach(function(key) {
+        state[key] = snap[key];
+      });
+      // If the snapshot replaced state.rotations wholesale, push the active
+      // rotation's per-rotation values back onto the top-level state so the
+      // renderer (which reads e.g. state.gauge2X) sees the restored layout.
+      if (snap.rotations && state.rotations) {
+        var cfg = state.rotations[state.activeRotation];
+        if (cfg) { for (var k in cfg) state[k] = cfg[k]; }
+      }
+    } finally {
+      suppressRouting = false;
+    }
+    if (typeof render === 'function') render();
+    // Persist the restored snapshot so it survives a reload.
+    if (typeof DashUIBridge !== 'undefined' && DashUIBridge.saveConfig) {
+      try { DashUIBridge.saveConfig(JSON.stringify(getRealState())); } catch (_) {}
+    }
+    return true;
+  } catch (e) {
+    console.error('DashUI.restoreState failed', e);
+    return false;
+  }
+};
+
+// Coalesce snapshot pushes , many proxy sets happen in quick succession during
+// a single user action; we only need to push once per microtask batch.
+var _snapshotPushPending = false;
+window.DashUI.pushSnapshotToKotlin = function() {
+  if (_snapshotPushPending) return;
+  _snapshotPushPending = true;
+  Promise.resolve().then(function() {
+    _snapshotPushPending = false;
+    try {
+      if (typeof DashUIBridge !== 'undefined' && DashUIBridge.pushClusterSnapshot) {
+        DashUIBridge.pushClusterSnapshot(window.DashUI.snapshotState());
+      }
+    } catch (_) { /* bridge not yet attached */ }
+  });
+};
+
+//  ============================================================
+//  GAUGE ASSIGNMENT (called from Kotlin via evaluateJavascript)
+//  ============================================================
+window.DashUI.setOption = function(key, value) {
+  const allowed = new Set(['hudMode', 'needlesEnabled']);
+  if (!allowed.has(key)) return false;
+  state[key] = !!value;
+  render();
+  if (typeof DashUIBridge !== 'undefined' && DashUIBridge.saveConfig) {
+    DashUIBridge.saveConfig(JSON.stringify(getRealState()));
+  }
+  return true;
+};
+
+window.DashUI.assignGaugeSlot = function(slot, action) {
+  // slot is 1-indexed (matches gauge1..gauge4 keys)
+  if (action === 'enable') {
+    state['gauge' + slot + 'Enabled'] = true;
+  } else if (action === 'disable') {
+    state['gauge' + slot + 'Enabled'] = false;
+  } else if (action === 'resize') {
+    // Resize stub: toggle slot between small and large sizes
+    var isSmallSlot = (slot === 1 || slot === 4);
+    var currentSize = isSmallSlot ? state.gaugeSmallSize : state.gaugeLargeSize;
+    var newSize = (currentSize === state.gaugeSmallSize) ? state.gaugeLargeSize : state.gaugeSmallSize;
+    if (isSmallSlot) {
+      state.gaugeSmallSize = newSize;
+    } else {
+      state.gaugeLargeSize = newSize;
+    }
+  } else if (action === 'move') {
+    window._moveSlot = slot;
+    console.log('[DashUI] move mode activated for slot', slot);
+  } else {
+    // Treat action as a sensor command key
+    state['gauge' + slot + 'Sensor'] = action;
+    if (!state['gauge' + slot + 'Enabled']) {
+      state['gauge' + slot + 'Enabled'] = true;
+    }
+  }
+  render();
+  if (typeof DashUIBridge !== 'undefined' && DashUIBridge.saveConfig) {
+    DashUIBridge.saveConfig(JSON.stringify(getRealState()));
+  }
+};
+
+//  ============================================================
+//  INIT
+//  ============================================================
+loadConfig().finally(() => {
+  if (INITIAL_FRAME && typeof INITIAL_FRAME === 'object') applyDataFrame(INITIAL_FRAME);
+  // Derive initial rotation from the OS , not the saved activeRotation, which may
+  // be stale. screen.orientation.angle uses the same clockwise convention as
+  // OrientationEventListener, so (360 - angle) % 360 maps it to cluster rotationDeg.
+  activateRotation(screenAngleToClusterRotation(screen.orientation?.angle || 0));
+  if (WS_URL) connectWs();
+  loop();
+  // Seed Kotlin with the initial snapshot so the first undo after entering
+  // cluster mode has something to restore.
+  if (window.DashUI && typeof window.DashUI.pushSnapshotToKotlin === 'function') {
+    window.DashUI.pushSnapshotToKotlin();
+  }
+});
+</script>
+<script src="cluster-preview-bridge.js"></script>
+</body>
+</html>

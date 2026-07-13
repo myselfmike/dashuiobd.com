@@ -1,8 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <meta http-equiv="refresh" content="0; url=../editor.html" />
+  <link rel="canonical" href="https://dashuiobd.com/editor.html" />
 <meta charset="utf-8" />
-<title>DashUI OBD-II Cluster Editor</title>
+<title>DashUI Cluster Editor | DashUI: OBD-II Diagnostics</title>
 <link rel="stylesheet" href="https://fonts.bunny.net/css?family=ibm-plex-sans:400,500,600|ibm-plex-mono:400,500|ibm-plex-sans-condensed:500,600" />
 <style>
   :root {
@@ -14,7 +16,7 @@
     --muted: #8b919c;
     --divider: #2a2d33;
     --red: #ef4444;
-    /* theme — overridden by JS. graph drives sweeps/segments/rings; text drives labels/readouts. */
+    /* theme, overridden by JS. graph drives sweeps/segments/rings; text drives labels/readouts. */
     --theme: #22d3ee;
     --theme-bright: #67e8f9;
     --theme-dim: rgba(34, 211, 238, 0.20);
@@ -183,7 +185,7 @@
     border-color: #dc143c !important;
     box-shadow: none !important;
   }
-  /* portrait rotations (90°, 270°) — height-bounded so the tall viewBox
+  /* portrait rotations (90°, 270°), height-bounded so the tall viewBox
      doesn't blow out the page. width follows the aspect ratio. */
   .cluster.portrait {
     width: auto;
@@ -335,7 +337,7 @@
     padding: 5px 0;
     font-size: 12px;
   }
-  /* ±1/5/10 stepper bar — used next to every numeric input */
+  /* ±1/5/10 stepper bar, used next to every numeric input */
   .stepper-row {
     display: inline-flex; gap: 2px; align-items: center;
     justify-content: flex-end;
@@ -396,7 +398,7 @@
     color: var(--muted);
     min-width: 8px;
   }
-  /* Paired X/Y row — no slider, two number boxes side by side */
+  /* Paired X/Y row, no slider, two number boxes side by side */
   .ds-row.ds-pair-row {
     grid-template-columns: 130px 1fr;
   }
@@ -541,7 +543,7 @@
     padding: 1px 5px;
   }
 
-  /* mode visibility — body[data-editor-mode] controls which panel shows */
+  /* mode visibility, body[data-editor-mode] controls which panel shows */
   .mode-classic, .mode-inspector, .mode-direct, .mode-command { display: none; }
   body[data-editor-mode="classic"]   .mode-classic   { display: block; }
   body[data-editor-mode="inspector"] .mode-inspector { display: block; }
@@ -864,10 +866,10 @@
 <body>
 <div class="page">
 
-  <div class="eyebrow">DashUI OBD-II</div>
-  <h1>DashUI OBD-II Cluster Editor</h1>
+  <div class="eyebrow">DashUI: OBD-II Diagnostics</div>
+  <h1>DashUI Cluster Editor</h1>
   <p class="lede">
-    Build and tune DashUI OBD-II cluster layouts across landscape, portrait, standard, metric,
+    Build and tune DashUI cluster layouts across landscape, portrait, standard, metric,
     analog, digital, and HUD display modes. Use the control summary below as a quick map of what
     each editor section changes.
   </p>
@@ -919,7 +921,7 @@
   <div class="controls">
 
     <div class="ctrl-block" style="grid-column: 1 / -1;">
-      <span class="ctrl-label">Screen rotation — each rotation has its own configuration</span>
+      <span class="ctrl-label">Screen rotation, each rotation has its own configuration</span>
       <div class="seg-picker" id="rotation-picker">
         <button data-val="0"   class="active">0° · landscape</button>
         <button data-val="90">90° · portrait</button>
@@ -1055,7 +1057,7 @@
       <!-- TACH group (arc OR bar) -->
       <g id="tach"></g>
 
-      <!-- gauge slots (4) — content swapped per layout -->
+      <!-- gauge slots (4), content swapped per layout -->
       <g id="slot-1"></g>
       <g id="slot-2"></g>
       <g id="slot-3"></g>
@@ -1070,13 +1072,13 @@
   </div>
   <div class="rotation-hint">
     Editing rotation <b id="active-rotation-label">0° · landscape</b>
-    — layout, tach style, segment shape &amp; text settings broadcast to all 4 rotations.
+    Layout, tach style, segment shape &amp; text settings broadcast to all 4 rotations.
     Positions &amp; sizes are per-rotation.
   </div>
 
   <div class="controls" style="margin-top: 24px; grid-template-columns: 1fr;">
     <div class="ctrl-block">
-      <span class="ctrl-label">Editor mode — same data, four ways to edit it</span>
+      <span class="ctrl-label">Editor mode, same data, four ways to edit it</span>
       <div class="seg-picker" id="editor-mode-picker">
         <button data-val="classic"   class="active">Classic · full panel</button>
         <button data-val="inspector">Inspector · select on canvas</button>
@@ -1135,7 +1137,7 @@
   <!-- ============== DESIGNER PANEL · INSPECTOR MODE ============== -->
   <div class="inspector mode-inspector">
     <div class="inspector-head">
-      <span>Inspector — selection: <span class="sel-tag" id="ins-target">Global</span></span>
+      <span>Inspector, selection: <span class="sel-tag" id="ins-target">Global</span></span>
       <button class="icon-btn" id="ins-clear">Clear selection <span class="kbd">Esc</span></button>
     </div>
     <div class="inspector-body" id="ins-body"></div>
@@ -1152,10 +1154,10 @@
         <b>Snap-to-grid</b> rounds drag positions to the grid step set in the toolbar (toggle with <code>G</code>). Use <code>Esc</code> to clear selection; click empty space to deselect.
       </div>
       <div>
-        <b>Inline tweaks.</b> While something is selected, a floating pill appears above it with the most-used parameters — type to commit, <code>Tab</code> to jump between fields.
+        <b>Inline tweaks.</b> While something is selected, a floating pill appears above it with the most-used parameters, type to commit, <code>Tab</code> to jump between fields.
       </div>
       <div>
-        <b>Per-rotation memory.</b> Drag-edits are saved to the active rotation's config only — portrait and landscape stay independent.
+        <b>Per-rotation memory.</b> Drag-edits are saved to the active rotation's config only, portrait and landscape stay independent.
       </div>
     </div>
   </div>
@@ -1164,7 +1166,7 @@
   <div class="cmdp mode-command">
     <div class="cmdp-search">
       <span class="icon">⌕</span>
-      <input id="cmdp-input" placeholder="Filter parameters — try “arc”, “gauge 2”, “fuel”, “height”…">
+      <input id="cmdp-input" placeholder="Filter parameters, try “arc”, “gauge 2”, “fuel”, “height”…">
       <span class="count" id="cmdp-count"></span>
     </div>
     <div class="cmdp-presets" id="cmdp-presets"></div>
@@ -1385,19 +1387,19 @@ const defaults = {
 };
 
 //  ============================================================
-//  ROTATION SYSTEM — 4 separate cluster configs (one per screen rotation)
+//  ROTATION SYSTEM, 4 separate cluster configs (one per screen rotation)
 //  ============================================================
 //  Each rotation has its own viewBox + per-rotation config. A single SVG
 //  preview shows the ACTIVE rotation. Inactive rotations are kept in
 //  state.rotations[r] and become live when the user clicks their picker
 //  button. Keys are classified into three buckets:
 //
-//    POSITIONAL  — gauge/tach positions & sizes that MUST differ between
+//    POSITIONAL , gauge/tach positions & sizes that MUST differ between
 //                  landscape and portrait. Never broadcast.
-//    BROADCAST   — layout, tach style, segment shape, text dy/size etc.
+//    BROADCAST  , layout, tach style, segment shape, text dy/size etc.
 //                  Edited on the active rotation, auto-applied to all
 //                  other rotations.
-//    GLOBAL      — colors, live values (RPM/redline/max), shape, fuel
+//    GLOBAL     , colors, live values (RPM/redline/max), shape, fuel
 //                  physics, edit-mode toggle. One value, applies to all
 //                  rotations.
 
@@ -1439,7 +1441,7 @@ const BROADCAST_SET  = new Set(BROADCAST_KEYS_LIST);
 const PER_ROTATION_ALL = [...POSITIONAL_KEYS_LIST, ...BROADCAST_KEYS_LIST];
 const PER_ROTATION_ALL_SET = new Set(PER_ROTATION_ALL);
 
-// Portrait positional overrides — sensible default tune for the 853×1843
+// Portrait positional overrides, sensible default tune for the 853×1843
 // portrait viewBox. Stacked gauge column down the center, tach near top.
 // Portrait positional defaults generated from dashui-cluster-config(2).json.
 // Rotations 90° and 270° use these positions/sizes by default.
@@ -1495,7 +1497,7 @@ for (const k of Object.keys(defaults)) {
 let suppressRouting = false;
 // Keys that, when changed, should keep the asset visually anchored to its center.
 // arc: keep the inner-edge midpoint (where labels sit) at the same Y when half-sweep
-//      or overall tach width changes — otherwise the arc slides up/down dramatically.
+//      or overall tach width changes, otherwise the arc slides up/down dramatically.
 // bar: keep the bar's horizontal center fixed when the overall width changes.
 const ARC_RECENTER_KEYS = new Set(['archHalfDeg', 'tachArcWidthPct']);
 const BAR_RECENTER_KEYS = new Set(['tachBarWidthPct']);
@@ -1574,7 +1576,7 @@ function activateRotation(r) {
   });
   const lbl = document.getElementById('active-rotation-label');
   if (lbl) lbl.textContent = ROTATION_LABEL[r];
-  // sync the per-rotation pickers (layout, tach) too — they reflect this rotation's values
+  // sync the per-rotation pickers (layout, tach) too, they reflect this rotation's values
   syncPerRotationPickersFromState();
   // rebuild whichever designer panel is currently visible
   if (typeof rebuildActivePanel === 'function') rebuildActivePanel();
@@ -2044,7 +2046,7 @@ try {
       }
       if (saved.activeRotation !== undefined) state.activeRotation = Number(saved.activeRotation);
     } else {
-      // legacy flat config — treat as rotation 0
+      // legacy flat config, treat as rotation 0
       if (saved.archCx !== undefined && saved.tachArcX === undefined) saved.tachArcX = saved.archCx;
       if (saved.archCy !== undefined && saved.tachArcY === undefined) saved.tachArcY = saved.archCy;
       if (saved.barY   !== undefined && saved.tachBarY === undefined) saved.tachBarY = saved.barY;
@@ -2122,7 +2124,7 @@ function resolvedGaugeUnitDy(slot) {
   const unitSize = Number(state[`gauge${slot}UnitSize`] || 0);
 
   // Unit text uses a fixed editable baseline, but large digital readouts can
-  // grow into it on the small outer gauges — most visibly oil temp's °C.
+  // grow into it on the small outer gauges, most visibly oil temp's °C.
   // Only protect units that are meant to sit below the value; if the user
   // deliberately places a unit above the value, preserve that custom layout.
   if (unitDy <= valueDy) return unitDy;
@@ -2200,12 +2202,12 @@ const LAYOUT_DEFAULTS = {
 };
 
 //  ============================================================
-//  UNIT SYSTEM — metric (base) ⇄ standard, cluster-wide
+//  UNIT SYSTEM, metric (base) ⇄ standard, cluster-wide
 //  ============================================================
 //  Each sensor's canonical value is metric, EXCEPT economy whose internal
 //  base remains MPG for legacy config compatibility. Metric economy display
 //  uses KPL. The toggle converts the readout, unit text and linear scale
-//  numbers — needle position is a fraction of the range, identical in either system.
+//  numbers, needle position is a fraction of the range, identical in either system.
 const UNIT_CONV = {
   speed:      { base: 'metric', metric: 'KPH',     std: 'MPH', toStd: v => v * 0.621371 },
   coolant:    { base: 'metric', metric: '°C',      std: '°F',  toStd: v => v * 9 / 5 + 32 },
@@ -2254,7 +2256,7 @@ function formatGaugeValue(key, baseVal) {
 }
 
 //  ============================================================
-//  TACH — arc or bar, with smart labels & peak-hold
+//  TACH, arc or bar, with smart labels & peak-hold
 //  ============================================================
 const NORMALIZED_LABELS = [0, 2000, 4000, 6000, 8000, 10000, 12000];
 const LABEL_MERGE_RPM = 350;   // if redline within ±350 of normalized tick, merge
@@ -2266,7 +2268,7 @@ function renderTach() {
   else renderTachArc(root);
 }
 
-// active rotation's viewBox width — drives proportional tach width
+// active rotation's viewBox width, drives proportional tach width
 function vbWidth() { return VIEWBOX[state.activeRotation].w; }
 
 // ---- Straight tower bar -----------------------------------------------------
@@ -2339,7 +2341,7 @@ function renderTachArc(root) {
   // No clip needed: each segment is an annular quadrilateral whose bottom edge
   // lies ON the inner arc and whose top edge lies ON a concentric outer arc.
   // The "lean" is expressed as an angular shift (dA) of the top relative to
-  // the bottom — so bottoms and tops always conform to the arc, regardless
+  // the bottom, so bottoms and tops always conform to the arc, regardless
   // of tilt amount, with zero sawtooth and no trimming required.
   const segGroup = el('g', {});
   root.appendChild(segGroup);
@@ -2355,7 +2357,7 @@ function renderTachArc(root) {
     const h = startH + Math.pow(tMid, state.archGrowthExp) * (endH - startH);
     const rOuter = rInner + h;
 
-    // Lean from radial — first segment 0°, last at maxTilt, exponent shapes the curve.
+    // Lean from radial, first segment 0°, last at maxTilt, exponent shapes the curve.
     // Convert the linear lean to an angular shift at rOuter:
     //   lateral displacement at top = h · tan(tilt)
     //   dA = displacement / rOuter
@@ -2363,7 +2365,7 @@ function renderTachArc(root) {
     const tilt = Math.pow(leanT, state.archSegTiltExp) * maxTilt;
     const dA = Math.tan(tilt) * h / rOuter;
 
-    // 4 corners — bottoms on inner arc at (a0, a1); tops on outer arc at (a0+dA, a1+dA).
+    // 4 corners, bottoms on inner arc at (a0, a1); tops on outer arc at (a0+dA, a1+dA).
     const blx = cx + rInner * Math.cos(a0), bly = cy + rInner * Math.sin(a0);
     const brx = cx + rInner * Math.cos(a1), bry = cy + rInner * Math.sin(a1);
     const tlx = cx + rOuter * Math.cos(a0 + dA), tly = cy + rOuter * Math.sin(a0 + dA);
@@ -2379,8 +2381,8 @@ function renderTachArc(root) {
     const isWarning = i >= warningSegIdx && i < redlineSegIdx;
     const on = i < lit;
 
-    const fill = on 
-      ? (isRed ? '#ef4444' : (isWarning ? '#fb923c' : state.theme)) 
+    const fill = on
+      ? (isRed ? '#ef4444' : (isWarning ? '#fb923c' : state.theme))
       : 'transparent';
 
     segGroup.appendChild(el('path', {
@@ -2393,7 +2395,7 @@ function renderTachArc(root) {
     }));
   }
 
-  // peak-hold marker — matches segment geometry: a chord from inner arc to outer arc
+  // peak-hold marker, matches segment geometry: a chord from inner arc to outer arc
   // at the same angular offset (a → a+dA) that segments use for their lean.
   const peakRpm = getDecayedValue('rpm');
   if (peakRpm > state.rpm + state.maxRpm * 0.015) {
@@ -2486,7 +2488,7 @@ function renderTachLabels(root, xStart, totalW, y, arc, cx, cy, rInner, startA, 
 }
 
 //  ============================================================
-//  GAUGE SHAPES (premium) — perimeter sweep works on all three
+//  GAUGE SHAPES (premium), perimeter sweep works on all three
 //  ============================================================
 // Returns a path string for the full perimeter, starting at top-center going clockwise.
 // Parameters: cx, cy = center; r = radius (or half-side).
@@ -2566,14 +2568,14 @@ function drawGhostGauge(parent, slot) {
   }, `SLOT ${slot} (OFF)`));
 }
 
-// Draw a gauge "outline" — bezel + perimeter sweep + center text/glyph.
+// Draw a gauge "outline", bezel + perimeter sweep + center text/glyph.
 // In needles mode, branches to drawNeedleGauge for non-glyph gauges.
 function drawGauge(parent, opts) {
   const { slot, x, y, size, label, value, unit, fraction, redFraction = null, peakFraction = null, min, max,
           centerGlyph = null, sweep = true } = opts;
   const r = size / 2;
   const cx = x, cy = y;
-  
+
   // Digital gauges get their own value-true outer radius bar. It is an open
   // 270° sweep path, not a dashed copy of the full bezel, so the filled bar
   // and its ticks stay in the same radial band for every gauge shape.
@@ -2675,7 +2677,7 @@ function drawGauge(parent, opts) {
     }
 
     if (peakFraction != null && peakFraction > safeFraction) {
-      // peak tick — short bright segment inside the same digital radius bar
+      // peak tick, short bright segment inside the same digital radius bar
       const peakStart = digitalTrackLen * Math.min(Math.max(peakFraction, 0), 1);
       const tickLen = Math.min(8, digitalTrackLen * 0.035);
       parent.appendChild(el('path', {
@@ -2789,7 +2791,7 @@ function drawGauge(parent, opts) {
 }
 
 //  ============================================================
-//  NEEDLE GAUGE — analog dial style, 270° sweep covering the top
+//  NEEDLE GAUGE, analog dial style, 270° sweep covering the top
 //  of the gauge (135° → 405°/45° in SVG, i.e. 7:30 → 4:30 CW the
 //  long way around). The bottom 90° (4:30 → 7:30 through 6:00) is
 //  intentionally unused. Numeric value reads BIG in the middle.
@@ -2931,7 +2933,7 @@ function drawNeedleGauge(parent, slot, opts) {
   const hubGradId = `n-hub-${uid}`;
   const accentGradId = `n-acc-${uid}`;
   const defs = el('defs', {});
-  // Bezel backdrop — dark base face with a theme aura that starts hard
+  // Bezel backdrop, dark base face with a theme aura that starts hard
   // at the black hub edge and fades toward the perimeter as gauges resize.
   const bgGrad = el('radialGradient', { id: bgGradId, cx: '50%', cy: '50%', r: '72%' });
   bgGrad.appendChild(el('stop', { offset: '0%',   'stop-color': state.theme, 'stop-opacity': 0 }));
@@ -2941,12 +2943,12 @@ function drawNeedleGauge(parent, slot, opts) {
   bgGrad.appendChild(el('stop', { offset: '58%',  'stop-color': state.theme, 'stop-opacity': 0.04 }));
   bgGrad.appendChild(el('stop', { offset: '100%', 'stop-color': state.theme, 'stop-opacity': 0.0 }));
   defs.appendChild(bgGrad);
-  // Hub black-hole — kept crisp/solid via the overlaid center circle.
+  // Hub black-hole, kept crisp/solid via the overlaid center circle.
   const hubGrad = el('radialGradient', { id: hubGradId, cx: '50%', cy: '50%', r: '20%' });
   hubGrad.appendChild(el('stop', { offset: '0%',  'stop-color': '#000', 'stop-opacity': 1 }));
   hubGrad.appendChild(el('stop', { offset: '100%', 'stop-color': '#000', 'stop-opacity': 1 }));
   defs.appendChild(hubGrad);
-  // Theme-tinted face bloom around the black center — disabled in HUD mode.
+  // Theme-tinted face bloom around the black center, disabled in HUD mode.
   const accGrad = el('radialGradient', { id: accentGradId, cx: '50%', cy: '50%', r: '72%' });
   accGrad.appendChild(el('stop', { offset: '0%',  'stop-color': state.theme, 'stop-opacity': 0 }));
   accGrad.appendChild(el('stop', { offset: '15%', 'stop-color': state.theme, 'stop-opacity': 0 }));
@@ -2965,7 +2967,7 @@ function drawNeedleGauge(parent, slot, opts) {
     stroke: rgba(state.theme, state.hudMode ? 0.26 : 0.34),
     'stroke-width': 1.25
   }));
-  // Theme-tinted glow inside bezel (subtle) — disabled in HUD mode.
+  // Theme-tinted glow inside bezel (subtle), disabled in HUD mode.
   if (!state.hudMode) {
     parent.appendChild(el('path', {
       d: shapePath(state.shape, cx, cy, r),
@@ -2978,7 +2980,7 @@ function drawNeedleGauge(parent, slot, opts) {
       stroke: 'none'
     }));
   }
-  // Inner trace ring — thin guide line, ghosted theme color.
+  // Inner trace ring, thin guide line, ghosted theme color.
   parent.appendChild(el('path', {
     d: shapePath(state.shape, cx, cy, r - 10),
     fill: 'none', stroke: rgba(state.theme, 0.14),
@@ -3043,7 +3045,7 @@ function drawNeedleGauge(parent, slot, opts) {
   // this gauge, so major marks always follow the actual sensor/readout spacing
   // instead of a permanent 9/12/3 overlay.
 
-  // RPM scale labels mirror the tach exactly — the ×1K normalized marks at
+  // RPM scale labels mirror the tach exactly, the ×1K normalized marks at
   // their true angular positions, plus the redline value in red (same merge
   // rule as renderTachLabels).
   if (sensorKey === 'rpm') {
@@ -3074,7 +3076,7 @@ function drawNeedleGauge(parent, slot, opts) {
     }
   }
 
-  // Hub black hole — crisp black disc with a defined edge so the face
+  // Hub black hole, crisp black disc with a defined edge so the face
   // glow starts right outside it and the needle has a clear hub zone.
   parent.appendChild(el('circle', {
     cx, cy, r: r * 0.11,
@@ -3083,7 +3085,7 @@ function drawNeedleGauge(parent, slot, opts) {
     'stroke-width': state.hudMode ? 0 : 1.1
   }));
 
-  // Peak-hold marker — small white tick on the rail at peak position.
+  // Peak-hold marker, small white tick on the rail at peak position.
   if (peakFraction != null && peakFraction > f) {
     const peakTick = gaugeTickAttrs(cx, cy, r, Math.min(1, peakFraction), 18, 6);
     parent.appendChild(el('line', {
@@ -3093,7 +3095,7 @@ function drawNeedleGauge(parent, slot, opts) {
     }));
   }
 
-  // Needle — pivots at center; with only a 90° top sweep the tail is tiny.
+  // Needle, pivots at center; with only a 90° top sweep the tail is tiny.
   const na = gaugeSweepAngle(f);
   const needleTip = gaugeSweepPoint(cx, cy, r, f, 14);
   const tailLen = 4;
@@ -3104,7 +3106,7 @@ function drawNeedleGauge(parent, slot, opts) {
     stroke: litColor, 'stroke-width': 3.5, 'stroke-linecap': 'round',
     filter: 'url(#text-glow)'
   }));
-  // Hub cap — dark disc with theme ring + bright dot at the very center.
+  // Hub cap, dark disc with theme ring + bright dot at the very center.
   parent.appendChild(el('circle', { cx, cy, r: 7.5, fill: '#020306',
     stroke: state.theme, 'stroke-width': 1.5 }));
   parent.appendChild(el('circle', { cx, cy, r: 2.5,
@@ -3149,7 +3151,7 @@ function drawNeedleGauge(parent, slot, opts) {
 }
 
 //  ============================================================
-//  ECO TREE — a cute little character that grows + reacts with MPG
+//  ECO TREE, a cute little character that grows + reacts with MPG
 //  ============================================================
 //  Composition: rounded trunk, layered cloud-canopy of overlapping leaf
 //  blobs, blinking eyes + mood-shifting mouth, ground tuft, and floating
@@ -3161,7 +3163,7 @@ function ecoTreeGlyph(cx, cy, avgMpg, slot) {
   const pBush   = Math.max(0, Math.min(1, (avgMpg - 5) / 5));    // 5-10 mpg
   const pFruit1 = Math.max(0, Math.min(1, (avgMpg - 10) / 5));   // 10-15 mpg
   const pFruit2 = Math.max(0, Math.min(1, (avgMpg - 15) / 5));   // 15-20 mpg
-  
+
   // Overall growth for trunk/canopy scaling. Maturity reached at 20.
   const t = Math.max(0.1, Math.min(1, avgMpg / 20));
   // Three mood tiers tied to growth.
@@ -3169,7 +3171,7 @@ function ecoTreeGlyph(cx, cy, avgMpg, slot) {
 
   // Static tilt (wilt) - reduced to keep it on the gauge center
   const wilt = Math.max(0, 1 - (avgMpg / 15));
-  const staticTilt = -8 * wilt; 
+  const staticTilt = -8 * wilt;
 
   const trunkBase = cy + 30;
   const trunkH = state.ecoTrunkH + 24 * t;
@@ -3312,11 +3314,11 @@ function ecoTreeGlyph(cx, cy, avgMpg, slot) {
   if (avgMpg > 10) {
     // Procedural randomization with buffer check to ensure lush, non-overlapping growth.
     const fruitDefs = [];
-    const numFruits = 12; 
-    const minBuffer = 9.0; 
+    const numFruits = 12;
+    const minBuffer = 9.0;
     // Deterministic pseudo-random helper based on sine hash
     const rnd = (s) => (Math.abs(Math.sin(s * 12.9898 + 78.233) * 43758.5453) % 1);
-    
+
     // We use a fixed layout for stable collision detection during sway/wobble
     const baseBlobs = [
       { dx: -canopyR * 0.58, dy: 3, r: canopyR * 0.76 },
@@ -3337,9 +3339,9 @@ function ecoTreeGlyph(cx, cy, avgMpg, slot) {
         const dist = rnd(s + 0.8) * rad;
         const fdx = Math.cos(ang) * dist;
         const fdy = Math.sin(ang) * dist;
-        const lx = b.dx + fdx; 
-        const ly = b.dy + fdy; 
-        
+        const lx = b.dx + fdx;
+        const ly = b.dy + fdy;
+
         let clash = false;
         for (const existing of fruitDefs) {
           if (Math.hypot(lx - existing.lx, ly - existing.ly) < minBuffer) { clash = true; break; }
@@ -3410,7 +3412,7 @@ function ecoTreeGlyph(cx, cy, avgMpg, slot) {
       }));
     }
   }
-  
+
   // ---- small clones (30+ MPG) ----------------------------------------
   if (avgMpg > 30) {
     const pClones = Math.max(0, Math.min(1, (avgMpg - 30) / 10));
@@ -3467,8 +3469,8 @@ function ecoTreeGlyph(cx, cy, avgMpg, slot) {
 }
 
 //  ============================================================
-//  FUEL LIQUID — themed, sloshing with spring-damper physics.
-//  Translucent + weighty feel — surface lags input, overshoots, oscillates
+//  FUEL LIQUID, themed, sloshing with spring-damper physics.
+//  Translucent + weighty feel, surface lags input, overshoots, oscillates
 //  before settling. On Android this is driven by TiltSource (gyro); here it
 //  follows the mouse.
 //  ============================================================
@@ -3549,7 +3551,7 @@ function fuelLiquidGlyph(cx, cy, pct, size, slot) {
   const fillRatio = Math.max(0.02, Math.min(1, pct / 100));
   const restSurfaceY = cy + r - (2 * r * fillRatio);
 
-  // Gravity-relative tilt — surface stays level relative to gravity, so it
+  // Gravity-relative tilt, surface stays level relative to gravity, so it
   // tilts OPPOSITE to the gauge's apparent rotation. Clamped at ±30°.
   const tilt = Math.max(-30, Math.min(30, displayedTilt));
   const slope = Math.tan(tilt * Math.PI / 180);
@@ -3576,7 +3578,7 @@ function fuelLiquidGlyph(cx, cy, pct, size, slot) {
     pts[i] = [x, yBase + w1 + w2];
   }
 
-  // Build the surface polyline once — reused as the top edge of the liquid
+  // Build the surface polyline once, reused as the top edge of the liquid
   // body AND as the meniscus highlight stroke.
   let surfaceD = `M ${pts[0][0]},${pts[0][1]}`;
   for (let i = 1; i <= N; i++) surfaceD += ` L ${pts[i][0]},${pts[i][1]}`;
@@ -3607,7 +3609,7 @@ function fuelLiquidGlyph(cx, cy, pct, size, slot) {
   defs.appendChild(grad);
   g.appendChild(defs);
 
-  // Tank interior — dark backdrop so the bezel reads as a container.
+  // Tank interior, dark backdrop so the bezel reads as a container.
   // HUD mode uses flat black only, matching the other gauge faces.
   g.appendChild(el('path', {
     d: shapePath(state.shape, cx, cy, r),
@@ -3615,7 +3617,7 @@ function fuelLiquidGlyph(cx, cy, pct, size, slot) {
     'clip-path': `url(#${clipId})`
   }));
 
-  // Liquid body — wave surface on top, straight drop to a point safely
+  // Liquid body, wave surface on top, straight drop to a point safely
   // below the gauge so the clip carves a clean wall.
   const xL = pts[0][0], xR = pts[N][0];
   const bottomY = cy + r + 40;
@@ -3656,7 +3658,7 @@ function fuelLiquidGlyph(cx, cy, pct, size, slot) {
   const FOAM_MAX  = 16;
   const foamThickness = FOAM_BASE + waveEnergy * (FOAM_MAX - FOAM_BASE);
   const foamBump = Math.min(foamThickness * 0.45, 5);
-  // Build the foam shape — top edge (bumpy, above surface), then back along surface.
+  // Build the foam shape, top edge (bumpy, above surface), then back along surface.
   let foamD = '';
   for (let i = 0; i <= N; i++) {
     const [px, py] = pts[i];
@@ -3675,7 +3677,7 @@ function fuelLiquidGlyph(cx, cy, pct, size, slot) {
     'clip-path': `url(#${clipId})`
   }));
 
-  // Foam specks — small bright dots that pop into existence when sloshing,
+  // Foam specks, small bright dots that pop into existence when sloshing,
   // riding the surface for their lifetime. Persistent so they don't strobe.
   for (const s of foamSpecks) {
     const sx = cx + s.xn * r * 0.95;
@@ -3695,7 +3697,7 @@ function fuelLiquidGlyph(cx, cy, pct, size, slot) {
     }));
   }
 
-  // Meniscus — a thin bright line at the foam/liquid interface, anchoring
+  // Meniscus, a thin bright line at the foam/liquid interface, anchoring
   // the surface read so the foam doesn't look detached.
   g.appendChild(el('path', {
     d: surfaceD,
@@ -3724,7 +3726,7 @@ function fuelLiquidGlyph(cx, cy, pct, size, slot) {
 }
 
 //  ============================================================
-//  LAYOUTS — populate 4 slots
+//  LAYOUTS, populate 4 slots
 //  ============================================================
 function renderGauges() {
   const s1 = document.getElementById('slot-1'); s1.innerHTML = '';
@@ -3751,7 +3753,7 @@ function renderGauges() {
     const slotSize = (i === 1 || i === 4) ? smallSize : largeSize;
     const slotX = state[`gauge${i}X`], slotY = state[`gauge${i}Y`];
 
-    // Effective range — per-gauge scale start/end (metric base) override the
+    // Effective range, per-gauge scale start/end (metric base) override the
     // sensor default. RPM is excluded from scale editing: it tracks Max RPM.
     const defMin = typeof config.min === 'function' ? config.min() : config.min;
     const defMax = typeof config.max === 'function' ? config.max() : config.max;
@@ -3802,7 +3804,7 @@ function renderGauges() {
 }
 
 //  ============================================================
-//  RENDER LOOP — re-runs every frame so peak-hold decays smoothly
+//  RENDER LOOP, re-runs every frame so peak-hold decays smoothly
 //  ============================================================
 function render() {
   try {
@@ -3898,7 +3900,7 @@ document.getElementById('edit-picker').querySelectorAll('button').forEach(b => {
   });
 });
 
-// Rotation picker — hand-wired (not via bindSegPicker, because activating
+// Rotation picker, hand-wired (not via bindSegPicker, because activating
 // a rotation requires more than just a state assignment).
 document.querySelectorAll('#rotation-picker button').forEach(b => {
   b.addEventListener('click', () => {
@@ -3909,7 +3911,7 @@ document.querySelectorAll('#rotation-picker button').forEach(b => {
   });
 });
 
-// Tach toggle changes which designer groups are visible — rebuild on click.
+// Tach toggle changes which designer groups are visible, rebuild on click.
 document.getElementById('tach-picker').addEventListener('click', () => {
   // defer so state has updated (bindSegPicker mutates state inside its own handler)
   setTimeout(() => buildDesigner(), 0);
@@ -4038,7 +4040,7 @@ bindSpeedSlider('ctl-speed', 'ctl-speed-num');
 bindEconomySlider('ctl-mpg', 'ctl-mpg-num');
 
 //  ============================================================
-//  DESIGNER PANEL — sliders for every geometry/physics value
+//  DESIGNER PANEL, sliders for every geometry/physics value
 //  ============================================================
 const DESIGNER_GROUPS = [
   {
@@ -4275,7 +4277,7 @@ document.getElementById('save-config').addEventListener('click', async () => {
   const json = JSON.stringify(payload, null, 2);
   document.getElementById('config-output').value = json;
   const status = document.getElementById('save-status');
-  status.textContent = '✓ Saved — copy the JSON and paste it back to me';
+  status.textContent = '✓ Saved, copy the JSON and paste it back to me';
   status.classList.add('ok');
   navigator.clipboard?.writeText(json).then(() => {
     status.textContent = '✓ Saved & copied to clipboard';
@@ -4403,7 +4405,7 @@ document.getElementById('copy-config').addEventListener('click', () => {
 })();
 
 //  ============================================================
-//  EDITOR UX LAYER — modes, history, snap, import, shortcuts
+//  EDITOR UX LAYER, modes, history, snap, import, shortcuts
 //  ============================================================
 const clusterEl = document.getElementById('cluster');
 
@@ -4790,7 +4792,7 @@ document.getElementById('import-file-input')?.addEventListener('change', (e) => 
     document.getElementById('import-text').value = text;
     try {
       JSON.parse(text);
-      msg.textContent = '✓ Copied from file — click Apply to import';
+      msg.textContent = '✓ Copied from file, click Apply to import';
       msg.className = 'modal-ok';
     } catch (err) {
       msg.textContent = 'File loaded, but JSON looks invalid: ' + err.message;
@@ -4925,7 +4927,7 @@ function renderSelectionOverlay() {
         }));
       });
     }
-    // Feature highlight (label/value/unit — not the multi-element scale ring)
+    // Feature highlight (label/value/unit, not the multi-element scale ring)
     if (activeSub && activeSub !== 'scale') {
       const textEl = document.querySelector(`text[data-text-slot="${slot}"][data-text-kind="${activeSub}"]`);
       if (textEl) {
@@ -5137,7 +5139,7 @@ function buildInspector() {
   const tag = document.getElementById('ins-target');
   if (!body) return;
   if (!activeSel) {
-    tag.textContent = 'Global — click a gauge or the tach on the canvas to inspect it';
+    tag.textContent = 'Global, click a gauge or the tach on the canvas to inspect it';
     body.innerHTML = inspectorGlobal();
   } else if (activeSel.startsWith('gauge')) {
     const slot = +activeSel.slice(5);
@@ -5145,7 +5147,7 @@ function buildInspector() {
     tag.textContent = `Gauge ${slot} (${role})`;
     body.innerHTML = inspectorGauge(slot);
   } else if (activeSel === 'tach') {
-    tag.textContent = `Tach — ${state.tach}`;
+    tag.textContent = `Tach, ${state.tach}`;
     body.innerHTML = inspectorTach();
   }
   wireInspectorInputs(body);
@@ -5155,7 +5157,7 @@ function inspectorGlobal() {
   return `
     <div class="inspector-card">
       <h4>Selection hint</h4>
-      <p class="hint">Click any gauge or the tach on the canvas — its dedicated parameters appear here. <code style="font-family:var(--plex-mono);font-size:11px;color:var(--theme-bright)">Esc</code> or the Clear button drops back to globals.</p>
+      <p class="hint">Click any gauge or the tach on the canvas, its dedicated parameters appear here. <code style="font-family:var(--plex-mono);font-size:11px;color:var(--theme-bright)">Esc</code> or the Clear button drops back to globals.</p>
     </div>
     <div class="inspector-card">
       <h4>Tach (shared)</h4>
@@ -5183,12 +5185,12 @@ function inspectorGauge(slot) {
   const vb = VIEWBOX[state.activeRotation];
   const sensors = Object.keys(SENSOR_MAP);
   const current = state[`gauge${slot}Sensor`] || LAYOUT_DEFAULTS[state.layout][slot-1];
-  
+
   let sSelect = `<div class="ds-row"><span class="ds-label">Sensor</span><select data-ins-sensor="${slot}" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--divider);color:var(--text);font-family:var(--plex-cond);font-size:12px;padding:4px;border-radius:2px">`;
   sensors.forEach(s => { sSelect += `<option value="${s}" ${s===current?'selected':''}>${displaySensorLabel(s)}</option>`; });
   sSelect += `</select></div>`;
 
-  // Scale-labels card — size always; start/end for non-RPM needle sensors.
+  // Scale-labels card, size always; start/end for non-RPM needle sensors.
   const scfg = SENSOR_MAP[current] || {};
   let scaleCard = '';
   if (scfg.raw) {
@@ -5348,7 +5350,7 @@ function wireInspectorInputs(scope) {
 }
 
 //  ============================================================
-//  DIRECT MANIPULATION — floating pill
+//  DIRECT MANIPULATION, floating pill
 //  ============================================================
 function removeDirectPill() {
   const p = document.querySelector('.direct-pill');
@@ -5637,7 +5639,7 @@ function buildCommandPalette() {
   });
 })();
 
-// initial mode application — boot into a clean, non-editing view. The edit
+// initial mode application, boot into a clean, non-editing view. The edit
 // overlay (purple dashed borders + corner handles) is a transient affordance
 // and must never persist across a reload: force edit mode off, and downgrade
 // the two canvas-edit modes (which re-enable handles) back to classic.

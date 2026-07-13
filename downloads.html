@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Download DashUI OBD-II from Google Drive and view site/download click counters." />
-  <title>Downloads | DashUI OBD-II</title>
+  <meta name="description" content="Download the latest public build of DashUI: OBD-II Diagnostics for Android." />
+  <title>Downloads | DashUI: OBD-II Diagnostics</title>
 
   <style>
     :root {
@@ -447,7 +447,7 @@
         padding: 1.1rem;
       }
     }
-  
+
 
     /* ============== uniform DashUI site header ============== */
     .site-header {
@@ -606,6 +606,8 @@
     }
 
   </style>
+  <link rel="stylesheet" href="assets/site.css" />
+  <script src="assets/site.js" defer></script>
 </head>
 
 <body>
@@ -635,7 +637,7 @@
         <span class="eyebrow">DashUI Downloads</span>
         <h1 id="downloads-title">Download the latest public files.</h1>
         <p class="lead">
-          Download the current DashUI public file from Google Drive. The download counter tracks button clicks from this page.
+          Get the latest public DashUI build for Android and start monitoring real vehicle data.
         </p>
       </div>
     </div>
@@ -644,51 +646,34 @@
       <section class="download-card" aria-labelledby="latest-download-title">
         <div class="download-head">
           <div>
-            <h2 id="latest-download-title">Current DashUI download</h2>
-            <p>Hosted on Google Drive so the website button can stay simple and stable.</p>
+            <h2 id="latest-download-title">Latest Android build</h2>
+            <p>The current public DashUI release, ready to install.</p>
           </div>
-          <span class="tag">Google Drive</span>
+          <span class="tag">Android APK</span>
         </div>
 
         <article class="asset">
           <div>
-            <h3>DashUI current public download</h3>
+            <h3>DashUI for Android</h3>
             <div class="asset-meta">
-              <span>Source: Google Drive</span>
-              <span>File ID: <strong>1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ</strong></span>
+              <span>Platform: Android</span>
+              <span>Channel: <strong>Public release</strong></span>
             </div>
           </div>
           <a class="button"
              href="https://drive.google.com/uc?export=download&id=1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ"
              target="_blank"
-             rel="noopener"
-             data-goatcounter-click="download_dashui_google_drive"
-             data-goatcounter-title="DashUI Google Drive download"
-             data-goatcounter-no-session="1">
-            Download DashUI
+             rel="noopener">
+            Download Android APK
           </a>
         </article>
-
-        <div class="download-metrics" aria-label="Download and page counters">
-          <div class="metric">
-            <span>Download clicks</span>
-            <strong id="download-click-count">-</strong>
-          </div>
-          <div class="metric">
-            <span>This page visits</span>
-            <strong id="page-visit-count">-</strong>
-          </div>
-        </div>
       </section>
     </div>
   </main>
 
   <footer>
     <div class="footer-inner">
-      <span>&copy; 2026 DashUI OBD-II. All rights reserved.</span>
-      <span class="site-counter" aria-label="Page visit counter">
-        Page visits: <strong data-page-visit-count>Counter setup needed</strong>
-      </span>
+      <span>&copy; 2026 DashUI.</span>
       <span>
         <a href="/">Home</a> ·
         <a href="editor.html">Cluster Editor</a> ·
@@ -699,70 +684,5 @@
     </div>
   </footer>
 
-  <script>
-    (function () {
-      const GOATCOUNTER_CODE = "dashuiobd";
-      const pageCounterTarget = document.getElementById("page-visit-count");
-      const downloadCounterTarget = document.getElementById("download-click-count");
-      const footerCounterTarget = document.querySelector("[data-page-visit-count]");
-      const downloadEventPath = "download_dashui_google_drive";
-
-      function setText(target, value) {
-        if (target) target.textContent = value;
-      }
-
-      function showSetupNeeded() {
-        setText(pageCounterTarget, "Counter setup needed");
-        setText(downloadCounterTarget, "Counter setup needed");
-        setText(footerCounterTarget, "Counter setup needed");
-      }
-
-      if (!GOATCOUNTER_CODE || GOATCOUNTER_CODE === "YOUR-GOATCOUNTER-CODE") {
-        showSetupNeeded();
-        return;
-      }
-
-      const normalizedPath = (location.pathname.replace(/\/$/, "") || "/");
-
-      window.goatcounter = window.goatcounter || {};
-      window.goatcounter.path = normalizedPath;
-
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = "https://gc.zgo.at/count.js";
-      script.dataset.goatcounter = "https://" + GOATCOUNTER_CODE + ".goatcounter.com/count";
-      document.body.appendChild(script);
-
-      function appendCounter(selector, path, fallback) {
-        const target = document.querySelector(selector);
-        if (!target || !window.goatcounter || typeof window.goatcounter.visit_count !== "function") return;
-        target.textContent = "";
-        window.goatcounter.visit_count({
-          append: selector,
-          path: path,
-          no_branding: true
-        });
-        setTimeout(function () {
-          if (target && !target.textContent.trim()) target.textContent = fallback;
-        }, 5000);
-      }
-
-      const waitForCounter = setInterval(function () {
-        if (window.goatcounter && typeof window.goatcounter.visit_count === "function") {
-          clearInterval(waitForCounter);
-          appendCounter("#page-visit-count", normalizedPath, "Visit count unavailable");
-          appendCounter("[data-page-visit-count]", normalizedPath, "Visit count unavailable");
-          appendCounter("#download-click-count", downloadEventPath, "Click count unavailable");
-        }
-      }, 100);
-
-      setTimeout(function () {
-        clearInterval(waitForCounter);
-        if (pageCounterTarget && pageCounterTarget.textContent === "Counter setup needed") pageCounterTarget.textContent = "Visit count unavailable";
-        if (downloadCounterTarget && downloadCounterTarget.textContent === "Counter setup needed") downloadCounterTarget.textContent = "Click count unavailable";
-        if (footerCounterTarget && footerCounterTarget.textContent === "Counter setup needed") footerCounterTarget.textContent = "Visit count unavailable";
-      }, 6000);
-    })();
-  </script>
 </body>
 </html>
