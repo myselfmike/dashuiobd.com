@@ -656,8 +656,9 @@
           <div>
             <h3>DashUI for Android</h3>
             <div class="asset-meta">
-              <span>Platform: Android</span>
-              <span>Channel: <strong>Public release</strong></span>
+              <span>Platform: <strong>Android</strong></span>
+              <span>Channel: <strong>Public Release</strong></span>
+              <span>Version: <strong id="apk-version">Latest on Drive</strong></span>
             </div>
           </div>
           <a class="button"
@@ -684,5 +685,29 @@
     </div>
   </footer>
 
+  <script>
+    // Live APK version label.
+    // Pulls the current file name (e.g. "DashUI-v1.2.3.apk") from your Google
+    // Drive via a small Apps Script web app, so it auto-updates on every rename.
+    // 1. Deploy the Apps Script (see deploy notes) as a web app.
+    // 2. Paste its /exec URL between the quotes below.
+    (function () {
+      var VERSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz95E4reMNtw6AsAmxVVGtg_6YgGcmwZ4bJg1apPmZDXSJijqeIED_FYApv_EPdMP2p/exec";
+
+      var target = document.getElementById("apk-version");
+      if (!target || !/^https:\/\//.test(VERSION_SCRIPT_URL)) return; // keep fallback text until configured
+
+      window.__dashuiApkVersion = function (data) {
+        if (data && data.name) target.textContent = data.name;
+      };
+
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = VERSION_SCRIPT_URL +
+        (VERSION_SCRIPT_URL.indexOf("?") === -1 ? "?" : "&") +
+        "callback=__dashuiApkVersion";
+      document.body.appendChild(s);
+    })();
+  </script>
 </body>
 </html>
