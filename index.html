@@ -1166,7 +1166,7 @@
           </div>
           <div class="download-stats">
             <div class="download-stat"><b>Android</b><span>Native phone and tablet support</span></div>
-            <div class="download-stat"><b>Current Build</b><span>Latest public DashUI release</span></div>
+            <div class="download-stat"><b>Current Build</b><span>Version: <strong id="main-apk-version">Latest on Drive</strong></span></div>
           </div>
         </article>
 
@@ -1192,5 +1192,25 @@
       <a href="privacy.html">Privacy</a>
     </div>
   </footer>
+
+  <script>
+    // Keep the main-page build label in sync with the latest public APK.
+    (function () {
+      var VERSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz95E4reMNtw6AsAmxVVGtg_6YgGcmwZ4bJg1apPmZDXSJijqeIED_FYApv_EPdMP2p/exec";
+      var target = document.getElementById("main-apk-version");
+      if (!target || !/^https:\/\//.test(VERSION_SCRIPT_URL)) return;
+
+      window.__dashuiMainApkVersion = function (data) {
+        if (data && data.name) target.textContent = data.name;
+      };
+
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = VERSION_SCRIPT_URL +
+        (VERSION_SCRIPT_URL.indexOf("?") === -1 ? "?" : "&") +
+        "callback=__dashuiMainApkVersion";
+      document.body.appendChild(s);
+    })();
+  </script>
 </body>
 </html>
