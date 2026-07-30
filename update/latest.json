@@ -1,0 +1,13 @@
+{
+    "schemaVersion": 1,
+    "packageName": "dev.dashui",
+    "versionName": "0.8.98",
+    "versionCode": 98,
+    "downloadUrl": "https://drive.google.com/uc?export=download&id=1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ",
+    "sha256": "e147433e49ce8bdb681d5e9eae8f40b4dfbf693be39362430eb4e8507347434a",
+    "sizeBytes": 50825945,
+    "publishedAt": "2026-07-30T16:45:52-04:00",
+    "releaseNotes": [],
+    "required": false,
+    "minimumSupportedVersionCode": null
+}
