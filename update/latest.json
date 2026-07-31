@@ -1,13 +1,15 @@
 {
     "schemaVersion": 1,
     "packageName": "dev.dashui",
-    "versionName": "0.8.99",
-    "versionCode": 99,
+    "versionName": "0.8.100",
+    "versionCode": 100,
     "downloadUrl": "https://drive.usercontent.google.com/download?id=1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ&export=download&confirm=t",
-    "sha256": "d592deea2e921d31bad7d04558d305cb456c64312b8047ba13714d4faaf06b45",
+    "sha256": "020745c4b45ab18ca91bc368d7a5a89acadfe000ce1bbaf499b976093dafbd76",
     "sizeBytes": 50825945,
-    "publishedAt": "2026-07-30T18:22:13-04:00",
-    "releaseNotes": [],
+    "publishedAt": "2026-07-31T03:48:26-04:00",
+    "releaseNotes": [
+        "Moved Check for Updates from Settings into the App Info dialog"
+    ],
     "required": false,
     "minimumSupportedVersionCode": null
 }
