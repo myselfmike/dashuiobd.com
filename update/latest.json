@@ -1,16 +1,17 @@
 {
     "schemaVersion": 1,
     "packageName": "dev.dashui",
-    "versionName": "0.8.101",
-    "versionCode": 101,
+    "versionName": "0.8.102",
+    "versionCode": 102,
     "downloadUrl": "https://drive.usercontent.google.com/download?id=1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ&export=download&confirm=t",
-    "sha256": "7e8343f0d2959653d3f3ac778270540cbb955275e1580e141dcbffc84b17a835",
-    "sizeBytes": 50842557,
-    "publishedAt": "2026-07-31T05:57:50-04:00",
+    "sha256": "b4aa5eafba614f7f130758a6fb68c31d6aea329e1df74107807799d819325ff8",
+    "sizeBytes": 50842329,
+    "publishedAt": "2026-08-01T00:55:52-04:00",
     "releaseNotes": [
-        "Boundary-scan/DTC pre-drive scan no longer mislabels a mid-scan transport drop as unreachable-modules; retries once after reconnect stabilizes",
-        "Automatic reconnects no longer reset force-poll cooldowns, fixing repeated 3-4s re-probes of already-known-unsupported PIDs",
-        "Confirmed-unsupported PIDs now appear in the drive log unavailable_pids.ndjson"
+        "Dropped-transport mid-scan is now reported honestly as incomplete_transport instead of unreachable-modules, and retries once after a confirmed automatic reconnect",
+        "Force-poll cooldowns and confirmed-unsupported PID evidence now survive an automatic reconnect instead of being reset",
+        "Confirmed-unsupported PIDs are forwarded into the drive log's unavailable_pids.ndjson, deduplicated per drive",
+        "A worse PRE retry result can no longer replace admissible first-attempt evidence; both attempts remain in the exported log either way"
     ],
     "required": false,
     "minimumSupportedVersionCode": null
