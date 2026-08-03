@@ -1,16 +1,14 @@
 {
     "schemaVersion": 1,
     "packageName": "dev.dashui",
-    "versionName": "0.8.103",
-    "versionCode": 103,
+    "versionName": "0.8.104",
+    "versionCode": 104,
     "downloadUrl": "https://drive.usercontent.google.com/download?id=1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ&export=download&confirm=t",
-    "sha256": "81cb2cb6743a9af572d7f21da8d18113edca6cda09c1380bdff3ac24772befbe",
+    "sha256": "f0157e05b70e3dd751375a97b017300dd627e4a5d1b76260db09997a3b62e114",
     "sizeBytes": 50842549,
-    "publishedAt": "2026-08-02T21:42:40-04:00",
+    "publishedAt": "2026-08-03T05:56:23-04:00",
     "releaseNotes": [
-        "Fixed dashboard values blanking out while driving",
-        "Steadier, faster live data on multi-module vehicles",
-        "Drive logs now finalize cleanly if the connection drops mid-drive"
+        "Automatic update check on launch - the update dialog now appears on its own when a newer version is available."
     ],
     "required": false,
     "minimumSupportedVersionCode": null
