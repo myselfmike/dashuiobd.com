@@ -1,14 +1,14 @@
 {
     "schemaVersion": 1,
     "packageName": "dev.dashui",
-    "versionName": "0.8.104",
-    "versionCode": 104,
+    "versionName": "0.8.105",
+    "versionCode": 105,
     "downloadUrl": "https://drive.usercontent.google.com/download?id=1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ&export=download&confirm=t",
-    "sha256": "f0157e05b70e3dd751375a97b017300dd627e4a5d1b76260db09997a3b62e114",
-    "sizeBytes": 50842549,
-    "publishedAt": "2026-08-03T05:56:23-04:00",
+    "sha256": "5b40a72f1cefa8f4b7d3f46f132bdc29a67fc0269ec1908e40e2b80e224d1394",
+    "sizeBytes": 50983805,
+    "publishedAt": "2026-08-08T12:44:19-04:00",
     "releaseNotes": [
-        "Automatic update check on launch - the update dialog now appears on its own when a newer version is available."
+        "Improved VAG diagnostic provider ownership and updater reliability."
     ],
     "required": false,
     "minimumSupportedVersionCode": null
