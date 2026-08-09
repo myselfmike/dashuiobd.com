@@ -1,15 +1,13 @@
 {
     "schemaVersion": 1,
     "packageName": "dev.dashui",
-    "versionName": "0.8.105",
-    "versionCode": 105,
+    "versionName": "0.8.106",
+    "versionCode": 106,
     "downloadUrl": "https://drive.usercontent.google.com/download?id=1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ&export=download&confirm=t",
-    "sha256": "5b40a72f1cefa8f4b7d3f46f132bdc29a67fc0269ec1908e40e2b80e224d1394",
-    "sizeBytes": 50983805,
-    "publishedAt": "2026-08-08T12:44:19-04:00",
-    "releaseNotes": [
-        "Improved VAG diagnostic provider ownership and updater reliability."
-    ],
+    "sha256": "950eaa20cc17c400f0d1491899f6aa7f30f07198b783b3bc64840886e15aa778",
+    "sizeBytes": 51000185,
+    "publishedAt": "2026-08-08T22:24:21-04:00",
+    "releaseNotes": [],
     "required": false,
     "minimumSupportedVersionCode": null
 }
