@@ -1,12 +1,12 @@
 {
     "schemaVersion": 1,
     "packageName": "dev.dashui",
-    "versionName": "0.8.107",
-    "versionCode": 107,
-    "downloadUrl": "https://drive.usercontent.google.com/download?id=1bW5C06iUTrKEwmWQu8i_jXo2aPC1j9pJ&export=download&confirm=t",
-    "sha256": "f557a3505705e55c4935d6712d9d8c25b43101aba8171d292dda601662c69944",
-    "sizeBytes": 50997585,
-    "publishedAt": "2026-08-10T08:06:33-04:00",
+    "versionName": "0.8.110",
+    "versionCode": 110,
+    "downloadUrl": "https://github.com/myselfmike/DashUIAPK/releases/latest/download/DashUI.apk",
+    "sha256": "8c85a57b6349f170c653e550cfb99f53cc28bfb629fafbda7dbb65bcb8ae650d",
+    "sizeBytes": 72255505,
+    "publishedAt": "2026-08-15T22:48:26+00:00",
     "releaseNotes": [],
     "required": false,
     "minimumSupportedVersionCode": null
